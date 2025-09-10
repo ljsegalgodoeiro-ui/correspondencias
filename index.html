@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Correspondências</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,134 +13,295 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
         }
 
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        .form-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 4px solid #3498db;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e8ed;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #27ae60, #229954);
-        }
-
-        .btn-success:hover {
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-        }
-
-        .btn-danger:hover {
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-        }
-
-        .correspondencia-card {
             background: white;
-            border: 1px solid #e1e8ed;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .correspondencia-card:hover {
-            transform: translateY(-2px);
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .system-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .condominio-name {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 2rem;
+            background: white;
+            padding: 0 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-item {
+            padding: 1rem 0;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: #1a73e8;
+        }
+
+        .nav-item.active {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .icon-users { background: #e3f2fd; color: #1976d2; }
+        .icon-mail { background: #e8f5e8; color: #2e7d32; }
+        .icon-clock { background: #fff3e0; color: #f57c00; }
+        .icon-alert { background: #ffebee; color: #d32f2f; }
+        .icon-check { background: #f3e5f5; color: #7b1fa2; }
+        .icon-delay { background: #fce4ec; color: #c2185b; }
+
+        .actions-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ff6d00;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e65100;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #856404;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .correspondence-item {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .correspondence-item:last-child {
+            border-bottom: none;
+        }
+
+        .correspondence-info {
+            flex: 1;
+        }
+
+        .correspondence-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .correspondence-details {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .correspondence-meta {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 1rem;
         }
 
         .status-pendente {
@@ -152,441 +314,1803 @@
             color: #155724;
         }
 
-        .entrega-section {
-            background: #e8f5e8;
-            padding: 15px;
+        .notify-btn {
+            background: #ff6d00;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
             border-radius: 6px;
-            margin-top: 15px;
-            border-left: 4px solid #27ae60;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+
+        .notify-btn:hover {
+            background: #e65100;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filters {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .action-link {
+            color: #25d366;
+            text-decoration: none;
+            font-size: 1.2rem;
+            margin: 0 0.5rem;
+        }
+
+        .action-link:hover {
+            transform: scale(1.2);
+        }
+
+        .hidden {
             display: none;
         }
 
-        .entrega-section.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; max-height: 0; }
-            to { opacity: 1; max-height: 200px; }
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s ease;
-        }
-
-        .alert.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid #3498db;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #7f8c8d;
-            font-weight: 500;
-        }
-
-        .search-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e8ed;
-            border-radius: 6px;
-            font-size: 16px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-            font-style: italic;
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .entrega-details {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .entrega-info {
+            margin-bottom: 0.25rem;
+        }
+
+        .entrega-info:last-child {
+            margin-bottom: 0;
+        }
+
+        .entrega-info strong {
+            color: #333;
         }
 
         @media (max-width: 768px) {
             .container {
-                margin: 10px;
+                padding: 1rem;
             }
             
-            .content {
-                padding: 20px;
-            }
-            
-            .grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                padding: 0 1rem;
+                overflow-x: auto;
+            }
+            
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                overflow-x: auto;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📬 Sistema de Correspondências</h1>
-            <p>Gerencie suas correspondências de forma eficiente</p>
+    <header class="header">
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-mail-bulk"></i>
+            </div>
+            <div>
+                <div class="system-title">
+                    <i class="fas fa-envelope"></i>
+                    Sistema de Correspondências
+                </div>
+            </div>
         </div>
+        <div class="condominio-name">
+            Condomínio Residencial Algodoeiro
+        </div>
+    </header>
 
-        <div class="content">
-            <div id="alertContainer"></div>
+    <nav class="navigation">
+        <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+            <i class="fas fa-chart-bar"></i>
+            Dashboard
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('correspondencias')">
+            <i class="fas fa-envelope"></i>
+            Correspondências
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('moradores')">
+            <i class="fas fa-users"></i>
+            Moradores
+        </a>
+    </nav>
 
-            <!-- Estatísticas -->
-            <div class="stats">
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+            <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number" id="totalCorrespondencias">0</div>
-                    <div class="stat-label">Total</div>
+                    <div class="stat-icon icon-users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalMoradores">0</h3>
+                        <p>Total<br>Moradores</p>
+                    </div>
                 </div>
+
                 <div class="stat-card">
-                    <div class="stat-number" id="pendentes">0</div>
-                    <div class="stat-label">Pendentes</div>
+                    <div class="stat-icon icon-mail">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCorrespondencias">0</h3>
+                        <p>Total<br>Correspondências</p>
+                    </div>
                 </div>
+
                 <div class="stat-card">
-                    <div class="stat-number" id="entregues">0</div>
-                    <div class="stat-label">Entregues</div>
+                    <div class="stat-icon icon-clock">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="recebidasHoje">0</h3>
+                        <p>Recebidas<br>Hoje</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pendentes">0</h3>
+                        <p>Pendentes</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="entreguesToday">0</h3>
+                        <p>Entregues<br>Hoje</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-delay">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="atrasadas">0</h3>
+                        <p>Atrasadas<br>+3 dias</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Formulário de Cadastro -->
-            <div class="form-section">
-                <h2>📝 Nova Correspondência</h2>
-                <form id="correspondenciaForm">
-                    <div class="grid">
+            <div class="actions-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Ações Rápidas
+                </h2>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="exportarDados()">
+                        <i class="fas fa-download"></i>
+                        Exportar Dados
+                    </button>
+                    <button class="btn btn-warning" onclick="notificarAtrasadas()">
+                        <i class="fas fa-bell"></i>
+                        Notificar Atrasadas
+                    </button>
+                </div>
+            </div>
+
+            <div class="alert-box" id="alertaAtrasadas" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="mensagemAlerta"></span>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-envelope"></i>
+                        Correspondências Recentes
+                    </div>
+                    <div class="card-content" id="correspondenciasRecentes">
+                        <p style="color: #666; text-align: center; padding: 2rem;">
+                            Nenhuma correspondência registrada ainda
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-building"></i>
+                        Resumo por Bloco
+                    </div>
+                    <div class="card-content" id="resumoBlocos">
+                        <p style="color: #666; text-align: center; padding: 2rem;">
+                            Nenhum morador cadastrado ainda
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Correspondências Section -->
+        <div id="correspondencias-section" class="hidden">
+            <div class="form-container">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope"></i>
+                    Registrar Nova Correspondência
+                </h2>
+                <p style="color: #666; margin-bottom: 2rem;">Cadastre uma nova correspondência recebida na portaria</p>
+
+                <form id="formCorrespondencia">
+                    <div class="form-grid">
                         <div class="form-group">
-                            <label for="destinatario">Destinatário *</label>
-                            <input type="text" id="destinatario" name="destinatario" required>
+                            <label for="dataRecebimento">Data de Recebimento *</label>
+                            <input type="date" id="dataRecebimento" required>
                         </div>
                         <div class="form-group">
-                            <label for="remetente">Remetente</label>
-                            <input type="text" id="remetente" name="remetente">
+                            <label for="horaRecebimento">Hora de Recebimento</label>
+                            <input type="time" id="horaRecebimento">
                         </div>
                         <div class="form-group">
-                            <label for="tipo">Tipo de Correspondência *</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="">Selecione o tipo</option>
-                                <option value="carta">Carta</option>
-                                <option value="encomenda">Encomenda</option>
-                                <option value="sedex">Sedex</option>
-                                <option value="ar">AR (Aviso de Recebimento)</option>
-                                <option value="telegrama">Telegrama</option>
-                                <option value="outros">Outros</option>
+                            <label for="bloco">Bloco *</label>
+                            <select id="bloco" required>
+                                <option value="">Selecione...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="dataRecebimento">Data de Recebimento *</label>
-                            <input type="date" id="dataRecebimento" name="dataRecebimento" required>
+                            <label for="apartamento">Apartamento *</label>
+                            <select id="apartamento" required>
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="descricao">Descrição do Produto/Correspondência *</label>
+                            <textarea id="descricao" placeholder="Ex: Encomenda dos Correios - Caixa média, Correspondência bancária - Envelope..." maxlength="500" required></textarea>
+                            <small style="color: #666; margin-top: 0.5rem; display: block;">
+                                <span id="contadorCaracteres">0/500 caracteres</span>
+                            </small>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="observacoes">Observações</label>
-                        <textarea id="observacoes" name="observacoes" rows="3" placeholder="Informações adicionais sobre a correspondência"></textarea>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="limparFormulario('formCorrespondencia')">
+                            <i class="fas fa-broom"></i>
+                            Limpar Formulário
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Registrar e Notificar
+                        </button>
                     </div>
-                    <button type="submit" class="btn">💾 Cadastrar Correspondência</button>
-                    <button type="button" class="btn btn-danger" onclick="limparFormulario()">🗑️ Limpar</button>
                 </form>
             </div>
 
-            <!-- Busca -->
-            <div class="search-section">
-                <h3>🔍 Buscar Correspondências</h3>
-                <input type="text" class="search-input" id="searchInput" placeholder="Digite o nome do destinatário, remetente ou tipo...">
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-title">
+                        <i class="fas fa-list"></i>
+                        Correspondências Registradas (<span id="contadorCorrespondencias">0</span>)
+                    </div>
+                    <div>
+                        <button class="btn btn-success" onclick="exportarCorrespondencias()">
+                            <i class="fas fa-file-excel"></i>
+                            Exportar Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <div class="form-group">
+                        <label>Buscar Morador</label>
+                        <input type="text" id="filtroMorador" placeholder="Nome do morador..." onkeyup="filtrarCorrespondencias()">
+                    </div>
+                    <div class="form-group">
+                        <label>Bloco</label>
+                        <select id="filtroBloco" onchange="filtrarCorrespondencias()">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="filtroStatus" onchange="filtrarCorrespondencias()">
+                            <option value="">Todos</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Entregue">Entregue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-secondary" onclick="limparFiltros()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-eraser"></i>
+                            Limpar Filtros
+                        </button>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>DATA/HORA</th>
+                                <th>MORADOR</th>
+                                <th>UNIDADE</th>
+                                <th>DESCRIÇÃO</th>
+                                <th>STATUS</th>
+                                <th>AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCorrespondencias">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                                    Nenhuma correspondência registrada ainda
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Moradores Section -->
+        <div id="moradores-section" class="hidden">
+            <div class="form-container">
+                <h2 class="section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Cadastrar Novo Morador
+                </h2>
+
+                <form id="formMorador">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nomeCompleto">Nome Completo *</label>
+                            <input type="text" id="nomeCompleto" placeholder="Digite o nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone (WhatsApp) *</label>
+                            <input type="tel" id="telefone" placeholder="(11) 99999-9999" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="blocoMorador">Bloco *</label>
+                            <input type="text" id="blocoMorador" placeholder="Ex: A, B, C, 1, 2..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apartamentoMorador">Apartamento *</label>
+                            <input type="text" id="apartamentoMorador" placeholder="Ex: 101, 102, 201..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="limparFormulario('formMorador')">
+                            <i class="fas fa-broom"></i>
+                            Limpar Formulário
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Cadastrar Morador
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <!-- Lista de Correspondências -->
-            <div class="form-section">
-                <h2>📋 Correspondências Cadastradas</h2>
-                <div id="listaCorrespondencias">
-                    <div class="no-data">
-                        Nenhuma correspondência cadastrada ainda.
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-title">
+                        <i class="fas fa-users"></i>
+                        Moradores Cadastrados (<span id="contadorMoradores">0</span>)
                     </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="text" id="buscaMorador" placeholder="Buscar por nome..." style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;" onkeyup="filtrarMoradores()">
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>NOME</th>
+                                <th>UNIDADE</th>
+                                <th>TELEFONE</th>
+                                <th>AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaMoradores">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                                    Nenhum morador cadastrado ainda
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal de Edição de Morador -->
+    <div id="modalEditarMorador" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Morador</h3>
+                <button class="close" onclick="fecharModal('modalEditarMorador')">&times;</button>
+            </div>
+            <form id="formEditarMorador">
+                <input type="hidden" id="editMoradorId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="editNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" id="editTelefone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bloco</label>
+                        <input type="text" id="editBloco" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Apartamento</label>
+                        <input type="text" id="editApartamento" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalEditarMorador')">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Entrega -->
+    <div id="modalEntrega" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Marcar como Entregue</h3>
+                <button class="close" onclick="fecharModal('modalEntrega')">&times;</button>
+            </div>
+            <form id="formEntrega">
+                <input type="hidden" id="entregaCorrespondenciaId">
+                <div class="form-group">
+                    <label for="entregueAra">Entregue para (Nome completo) *</label>
+                    <input type="text" id="entregueAra" placeholder="Digite o nome de quem retirou a correspondência" required>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dataEntrega">Data da Entrega</label>
+                        <input type="date" id="dataEntrega" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaEntrega">Hora da Entrega</label>
+                        <input type="time" id="horaEntrega" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="observacoesEntrega">Observações da Entrega</label>
+                    <textarea id="observacoesEntrega" placeholder="Informações adicionais sobre a entrega (opcional)" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalEntrega')">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i>
+                        Confirmar Entrega
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Sistema de persistência usando um objeto para simular banco de dados
-        class CorrespondenciasDB {
+        // Sistema de persistência usando localStorage
+        class DatabaseManager {
             constructor() {
-                this.dados = this.carregarDados();
-                this.proximoId = this.obterProximoId();
+                this.initializeData();
             }
 
-            carregarDados() {
-                // Simula carregamento de dados - aqui você faria uma chamada para sua API
-                const dadosSalvos = JSON.parse(localStorage.getItem('correspondencias') || '[]');
-                return dadosSalvos;
+            initializeData() {
+                if (!localStorage.getItem('moradores')) {
+                    localStorage.setItem('moradores', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('correspondencias')) {
+                    localStorage.setItem('correspondencias', JSON.stringify([]));
+                }
             }
 
-            salvarDados() {
-                // Simula salvamento de dados - aqui você faria uma chamada para sua API
-                localStorage.setItem('correspondencias', JSON.stringify(this.dados));
+            // Métodos para Moradores
+            getMoradores() {
+                return JSON.parse(localStorage.getItem('moradores') || '[]');
             }
 
-            obterProximoId() {
-                const ids = this.dados.map(item => item.id || 0);
-                return Math.max(...ids, 0) + 1;
+            saveMoradores(moradores) {
+                localStorage.setItem('moradores', JSON.stringify(moradores));
             }
 
-            adicionar(correspondencia) {
-                const nova = {
-                    ...correspondencia,
-                    id: this.proximoId++,
-                    status: 'pendente',
-                    dataCadastro: new Date().toISOString()
-                };
-                this.dados.push(nova);
-                this.salvarDados();
-                return nova;
+            addMorador(morador) {
+                const moradores = this.getMoradores();
+                morador.id = Date.now().toString();
+                morador.dataCadastro = new Date().toISOString();
+                moradores.push(morador);
+                this.saveMoradores(moradores);
+                return morador;
             }
 
-            obterTodos() {
-                return [...this.dados];
-            }
-
-            atualizar(id, dados) {
-                const index = this.dados.findIndex(item => item.id === id);
+            updateMorador(id, dadosAtualizados) {
+                const moradores = this.getMoradores();
+                const index = moradores.findIndex(m => m.id === id);
                 if (index !== -1) {
-                    this.dados[index] = { ...this.dados[index], ...dados };
-                    this.salvarDados();
-                    return this.dados[index];
+                    moradores[index] = { ...moradores[index], ...dadosAtualizados };
+                    this.saveMoradores(moradores);
+                    return moradores[index];
                 }
                 return null;
             }
 
-            remover(id) {
-                const index = this.dados.findIndex(item => item.id === id);
+            deleteMorador(id) {
+                const moradores = this.getMoradores();
+                const novosMoradores = moradores.filter(m => m.id !== id);
+                this.saveMoradores(novosMoradores);
+            }
+
+            // Métodos para Correspondências
+            getCorrespondencias() {
+                return JSON.parse(localStorage.getItem('correspondencias') || '[]');
+            }
+
+            saveCorrespondencias(correspondencias) {
+                localStorage.setItem('correspondencias', JSON.stringify(correspondencias));
+            }
+
+            addCorrespondencia(correspondencia) {
+                const correspondencias = this.getCorrespondencias();
+                correspondencia.id = Date.now().toString();
+                correspondencia.status = 'Pendente';
+                correspondencia.dataCadastro = new Date().toISOString();
+                correspondencias.push(correspondencia);
+                this.saveCorrespondencias(correspondencias);
+                return correspondencia;
+            }
+
+            updateCorrespondencia(id, dadosAtualizados) {
+                const correspondencias = this.getCorrespondencias();
+                const index = correspondencias.findIndex(c => c.id === id);
                 if (index !== -1) {
-                    const removido = this.dados.splice(index, 1)[0];
-                    this.salvarDados();
-                    return removido;
+                    correspondencias[index] = { ...correspondencias[index], ...dadosAtualizados };
+                    this.saveCorrespondencias(correspondencias);
+                    return correspondencias[index];
                 }
                 return null;
             }
-        }
 
-        // Instância do banco de dados
-        const db = new CorrespondenciasDB();
-
-        // Elementos do DOM
-        const form = document.getElementById('correspondenciaForm');
-        const listaCorrespondencias = document.getElementById('listaCorrespondencias');
-        const searchInput = document.getElementById('searchInput');
-        const alertContainer = document.getElementById('alertContainer');
-
-        // Event Listeners
-        form.addEventListener('submit', handleSubmit);
-        searchInput.addEventListener('input', filtrarCorrespondencias);
-
-        // Definir data atual como padrão
-        document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
-
-        function handleSubmit(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const correspondencia = {
-                destinatario: formData.get('destinatario'),
-                remetente: formData.get('remetente'),
-                tipo: formData.get('tipo'),
-                dataRecebimento: formData.get('dataRecebimento'),
-                observacoes: formData.get('observacoes')
-            };
-
-            try {
-                db.adicionar(correspondencia);
-                mostrarAlerta('Correspondência cadastrada com sucesso!', 'success');
-                form.reset();
-                document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
-                renderizarCorrespondencias();
-                atualizarEstatisticas();
-            } catch (error) {
-                mostrarAlerta('Erro ao cadastrar correspondência. Tente novamente.', 'error');
-                console.error('Erro:', error);
+            deleteCorrespondencia(id) {
+                const correspondencias = this.getCorrespondencias();
+                const novasCorrespondencias = correspondencias.filter(c => c.id !== id);
+                this.saveCorrespondencias(novasCorrespondencias);
             }
         }
 
-        function renderizarCorrespondencias(correspondencias = null) {
-            const dados = correspondencias || db.obterTodos();
-            
-            if (dados.length === 0) {
-                listaCorrespondencias.innerHTML = '<div class="no-data">Nenhuma correspondência encontrada.</div>';
+        // Instância global do gerenciador de banco de dados
+        const db = new DatabaseManager();
+
+        // Variáveis globais
+        let currentSection = 'dashboard';
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Definir data e hora atuais
+            const hoje = new Date();
+            document.getElementById('dataRecebimento').value = hoje.toISOString().split('T')[0];
+            document.getElementById('horaRecebimento').value = hoje.toTimeString().slice(0, 5);
+
+            // Carregar dados
+            carregarMoradores();
+            carregarCorrespondencias();
+            atualizarEstatisticas();
+            atualizarDashboard();
+
+            // Event listeners
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // Formulário de morador
+            document.getElementById('formMorador').addEventListener('submit', function(e) {
+                e.preventDefault();
+                adicionarMorador();
+            });
+
+            // Formulário de correspondência
+            document.getElementById('formCorrespondencia').addEventListener('submit', function(e) {
+                e.preventDefault();
+                adicionarCorrespondencia();
+            });
+
+            // Formulário de edição de morador
+            document.getElementById('formEditarMorador').addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarEdicaoMorador();
+            });
+
+            // Formulário de entrega
+            document.getElementById('formEntrega').addEventListener('submit', function(e) {
+                e.preventDefault();
+                confirmarEntrega();
+            });
+
+            // Contador de caracteres
+            document.getElementById('descricao').addEventListener('input', function() {
+                const contador = document.getElementById('contadorCaracteres');
+                contador.textContent = `${this.value.length}/500 caracteres`;
+            });
+
+            // Mudança de bloco atualiza apartamentos
+            document.getElementById('bloco').addEventListener('change', function() {
+                atualizarApartamentos();
+            });
+        }
+
+        // Funções de navegação
+        function showSection(sectionName) {
+            // Esconder todas as seções
+            document.querySelectorAll('[id$="-section"]').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Mostrar seção selecionada
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+
+            // Atualizar navegação
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+
+            currentSection = sectionName;
+
+            // Atualizar dados específicos da seção
+            if (sectionName === 'dashboard') {
+                atualizarDashboard();
+            } else if (sectionName === 'correspondencias') {
+                carregarCorrespondencias();
+            } else if (sectionName === 'moradores') {
+                carregarMoradores();
+            }
+        }
+
+        // Funções de Moradores
+        function adicionarMorador() {
+            const nome = document.getElementById('nomeCompleto').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const bloco = document.getElementById('blocoMorador').value.trim().toUpperCase();
+            const apartamento = document.getElementById('apartamentoMorador').value.trim();
+
+            if (!nome || !telefone || !bloco || !apartamento) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
                 return;
             }
 
-            const html = dados.map(corresp => `
-                <div class="correspondencia-card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                        <div>
-                            <h3 style="color: #2c3e50; margin-bottom: 5px;">📧 ${corresp.destinatario}</h3>
-                            <span class="status-badge status-${corresp.status}">${corresp.status}</span>
-                        </div>
-                        <div style="text-align: right; font-size: 14px; color: #7f8c8d;">
-                            ID: #${corresp.id}
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <p><strong>Remetente:</strong> ${corresp.remetente || 'Não informado'}</p>
-                        <p><strong>Tipo:</strong> ${corresp.tipo}</p>
-                        <p><strong>Data de Recebimento:</strong> ${formatarData(corresp.dataRecebimento)}</p>
-                        ${corresp.observacoes ? `<p><strong>Observações:</strong> ${corresp.observacoes}</p>` : ''}
-                    </div>
+            // Verificar se já existe morador na mesma unidade
+            const moradores = db.getMoradores();
+            const jaExiste = moradores.some(m => 
+                m.bloco.toUpperCase() === bloco && 
+                m.apartamento === apartamento
+            );
 
-                    ${corresp.status === 'entregue' ? `
-                        <div class="entrega-section show">
-                            <h4 style="color: #27ae60; margin-bottom: 10px;">✅ Informações da Entrega</h4>
-                            <p><strong>Entregue para:</strong> ${corresp.entregueAra}</p>
-                            <p><strong>Data da Entrega:</strong> ${formatarData(corresp.dataEntrega)}</p>
-                            <p><strong>Hora da Entrega:</strong> ${corresp.horaEntrega}</p>
-                        </div>
-                    ` : ''}
+            if (jaExiste) {
+                showToast('Já existe um morador cadastrado nesta unidade!', 'error');
+                return;
+            }
 
-                    <div style="margin-top: 15px;">
-                        ${corresp.status === 'pendente' ? `
-                            <button class="btn btn-success" onclick="marcarComoEntregue(${corresp.id})">
-                                ✅ Marcar como Entregue
-                            </button>
-                        ` : ''}
-                        <button class="btn btn-danger" onclick="removerCorrespondencia(${corresp.id})">
-                            🗑️ Excluir
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+            const novoMorador = {
+                nome,
+                telefone,
+                bloco,
+                apartamento
+            };
 
-            listaCorrespondencias.innerHTML = html;
+            db.addMorador(novoMorador);
+            showToast('Morador cadastrado com sucesso!');
+            limparFormulario('formMorador');
+            carregarMoradores();
+            atualizarEstatisticas();
         }
 
-        function marcarComoEntregue(id) {
-            const pessoa = prompt('Para quem foi entregue a correspondência?');
-            if (pessoa && pessoa.trim()) {
-                const agora = new Date();
-                const dados = {
-                    status: 'entregue',
-                    entregueAra: pessoa.trim(),
-                    dataEntrega: agora.toISOString().split('T')[0],
-                    horaEntrega: agora.toTimeString().split(' ')[0].substring(0, 5)
-                };
+        function carregarMoradores() {
+            const moradores = db.getMoradores();
+            const tbody = document.getElementById('tabelaMoradores');
+            const contador = document.getElementById('contadorMoradores');
 
-                db.atualizar(id, dados);
-                mostrarAlerta('Correspondência marcada como entregue!', 'success');
-                renderizarCorrespondencias();
+            contador.textContent = moradores.length;
+
+            if (moradores.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhum morador cadastrado ainda
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = moradores.map(morador => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                ${morador.nome.charAt(0).toUpperCase()}
+                            </div>
+                            ${morador.nome}
+                        </div>
+                    </td>
+                    <td>Bloco ${morador.bloco} - Apto ${morador.apartamento}</td>
+                    <td>${morador.telefone}</td>
+                    <td>
+                        <a href="https://wa.me/55${morador.telefone.replace(/\D/g, '')}" 
+                           class="action-link" target="_blank" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <button class="btn btn-sm btn-primary" onclick="editarMorador('${morador.id}')" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="excluirMorador('${morador.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Atualizar selects de bloco e apartamento
+            atualizarSelectsBlocoApartamento();
+        }
+
+        function editarMorador(id) {
+            const moradores = db.getMoradores();
+            const morador = moradores.find(m => m.id === id);
+            
+            if (!morador) return;
+
+            document.getElementById('editMoradorId').value = id;
+            document.getElementById('editNome').value = morador.nome;
+            document.getElementById('editTelefone').value = morador.telefone;
+            document.getElementById('editBloco').value = morador.bloco;
+            document.getElementById('editApartamento').value = morador.apartamento;
+
+            abrirModal('modalEditarMorador');
+        }
+
+        function salvarEdicaoMorador() {
+            const id = document.getElementById('editMoradorId').value;
+            const nome = document.getElementById('editNome').value.trim();
+            const telefone = document.getElementById('editTelefone').value.trim();
+            const bloco = document.getElementById('editBloco').value.trim().toUpperCase();
+            const apartamento = document.getElementById('editApartamento').value.trim();
+
+            if (!nome || !telefone || !bloco || !apartamento) {
+                showToast('Preencha todos os campos!', 'error');
+                return;
+            }
+
+            const dadosAtualizados = { nome, telefone, bloco, apartamento };
+            db.updateMorador(id, dadosAtualizados);
+
+            showToast('Morador atualizado com sucesso!');
+            fecharModal('modalEditarMorador');
+            carregarMoradores();
+        }
+
+        function excluirMorador(id) {
+            if (confirm('Tem certeza que deseja excluir este morador?')) {
+                db.deleteMorador(id);
+                showToast('Morador excluído com sucesso!');
+                carregarMoradores();
                 atualizarEstatisticas();
             }
         }
 
-        function removerCorrespondencia(id) {
+        function filtrarMoradores() {
+            const termo = document.getElementById('buscaMorador').value.toLowerCase();
+            const moradores = db.getMoradores();
+            const moradoresFiltrados = moradores.filter(morador =>
+                morador.nome.toLowerCase().includes(termo) ||
+                morador.bloco.toLowerCase().includes(termo) ||
+                morador.apartamento.toLowerCase().includes(termo)
+            );
+
+            renderizarMoradores(moradoresFiltrados);
+        }
+
+        // Funções de Correspondências
+        function adicionarCorrespondencia() {
+            const dataRecebimento = document.getElementById('dataRecebimento').value;
+            const horaRecebimento = document.getElementById('horaRecebimento').value;
+            const bloco = document.getElementById('bloco').value;
+            const apartamento = document.getElementById('apartamento').value;
+            const descricao = document.getElementById('descricao').value.trim();
+
+            if (!dataRecebimento || !bloco || !apartamento || !descricao) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+
+            // Encontrar o morador
+            const moradores = db.getMoradores();
+            const morador = moradores.find(m => 
+                m.bloco.toUpperCase() === bloco.toUpperCase() && 
+                m.apartamento === apartamento
+            );
+
+            if (!morador) {
+                showToast('Morador não encontrado para esta unidade!', 'error');
+                return;
+            }
+
+            const novaCorrespondencia = {
+                dataRecebimento,
+                horaRecebimento,
+                bloco: bloco.toUpperCase(),
+                apartamento,
+                descricao,
+                moradorId: morador.id,
+                nomeCompleto: morador.nome,
+                telefone: morador.telefone
+            };
+
+            db.addCorrespondencia(novaCorrespondencia);
+            showToast('Correspondência registrada com sucesso!');
+            limparFormulario('formCorrespondencia');
+            
+            // Redefir data e hora atuais
+            const hoje = new Date();
+            document.getElementById('dataRecebimento').value = hoje.toISOString().split('T')[0];
+            document.getElementById('horaRecebimento').value = hoje.toTimeString().slice(0, 5);
+
+            carregarCorrespondencias();
+            atualizarEstatisticas();
+
+            // Enviar notificação WhatsApp (opcional)
+            if (confirm('Deseja enviar notificação por WhatsApp para o morador?')) {
+                enviarNotificacaoWhatsApp(morador, novaCorrespondencia);
+            }
+        }
+
+        function carregarCorrespondencias() {
+            const correspondencias = db.getCorrespondencias();
+            const tbody = document.getElementById('tabelaCorrespondencias');
+            const contador = document.getElementById('contadorCorrespondencias');
+
+            contador.textContent = correspondencias.length;
+
+            if (correspondencias.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhuma correspondência registrada ainda
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Ordenar por data mais recente
+            const correspondenciasOrdenadas = correspondencias.sort((a, b) => 
+                new Date(b.dataRecebimento) - new Date(a.dataRecebimento)
+            );
+
+            tbody.innerHTML = correspondenciasOrdenadas.map(corresp => {
+                const dataFormatada = formatarData(corresp.dataRecebimento);
+                const horaFormatada = corresp.horaRecebimento || '--:--';
+                
+                let statusClass = corresp.status === 'Entregue' ? 'status-entregue' : 'status-pendente';
+                
+                return `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600;">${dataFormatada}</div>
+                            <div style="font-size: 0.8rem; color: #666;">${horaFormatada}</div>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    ${corresp.nomeCompleto.charAt(0).toUpperCase()}
+                                </div>
+                                ${corresp.nomeCompleto}
+                            </div>
+                        </td>
+                        <td>Bloco ${corresp.bloco} - Apto ${corresp.apartamento}</td>
+                        <td>
+                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                ${corresp.descricao}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge ${statusClass}">${corresp.status}</span>
+                            ${corresp.status === 'Entregue' && corresp.entregueAra ? `
+                                <div class="entrega-details">
+                                    <div class="entrega-info">
+                                        <strong>Entregue para:</strong> ${corresp.entregueAra}
+                                    </div>
+                                    <div class="entrega-info">
+                                        <strong>Data:</strong> ${formatarData(corresp.dataEntrega)} às ${corresp.horaEntrega || '--:--'}
+                                    </div>
+                                    ${corresp.observacoesEntrega ? `
+                                        <div class="entrega-info">
+                                            <strong>Obs:</strong> ${corresp.observacoesEntrega}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </td>
+                        <td>
+                            ${corresp.status === 'Pendente' ? `
+                                <button class="btn btn-sm btn-success" onclick="marcarComoEntregue('${corresp.id}')" title="Marcar como Entregue">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            ` : ''}
+                            <a href="https://wa.me/55${corresp.telefone.replace(/\D/g, '')}" 
+                               class="action-link" target="_blank" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <button class="btn btn-sm btn-danger" onclick="excluirCorrespondencia('${corresp.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function marcarComoEntregue(id) {
+            const hoje = new Date();
+            document.getElementById('entregaCorrespondenciaId').value = id;
+            document.getElementById('dataEntrega').value = hoje.toISOString().split('T')[0];
+            document.getElementById('horaEntrega').value = hoje.toTimeString().slice(0, 5);
+            document.getElementById('entregueAra').value = '';
+            document.getElementById('observacoesEntrega').value = '';
+
+            abrirModal('modalEntrega');
+        }
+
+        function confirmarEntrega() {
+            const id = document.getElementById('entregaCorrespondenciaId').value;
+            const entregueAra = document.getElementById('entregueAra').value.trim();
+            const dataEntrega = document.getElementById('dataEntrega').value;
+            const horaEntrega = document.getElementById('horaEntrega').value;
+            const observacoesEntrega = document.getElementById('observacoesEntrega').value.trim();
+
+            if (!entregueAra || !dataEntrega || !horaEntrega) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+
+            const dadosEntrega = {
+                status: 'Entregue',
+                entregueAra,
+                dataEntrega,
+                horaEntrega,
+                observacoesEntrega,
+                dataHoraEntrega: new Date().toISOString()
+            };
+
+            db.updateCorrespondencia(id, dadosEntrega);
+            showToast('Correspondência marcada como entregue!');
+            fecharModal('modalEntrega');
+            carregarCorrespondencias();
+            atualizarEstatisticas();
+        }
+
+        function excluirCorrespondencia(id) {
             if (confirm('Tem certeza que deseja excluir esta correspondência?')) {
-                db.remover(id);
-                mostrarAlerta('Correspondência excluída com sucesso!', 'success');
-                renderizarCorrespondencias();
+                db.deleteCorrespondencia(id);
+                showToast('Correspondência excluída com sucesso!');
+                carregarCorrespondencias();
                 atualizarEstatisticas();
             }
         }
 
         function filtrarCorrespondencias() {
-            const termo = searchInput.value.toLowerCase();
-            const correspondencias = db.obterTodos().filter(corresp => 
-                corresp.destinatario.toLowerCase().includes(termo) ||
-                (corresp.remetente && corresp.remetente.toLowerCase().includes(termo)) ||
-                corresp.tipo.toLowerCase().includes(termo)
-            );
-            renderizarCorrespondencias(correspondencias);
+            const termoBusca = document.getElementById('filtroMorador').value.toLowerCase();
+            const blocoFiltro = document.getElementById('filtroBloco').value;
+            const statusFiltro = document.getElementById('filtroStatus').value;
+
+            const correspondencias = db.getCorrespondencias();
+            const correspondenciasFiltradas = correspondencias.filter(corresp => {
+                const matchNome = corresp.nomeCompleto.toLowerCase().includes(termoBusca);
+                const matchBloco = !blocoFiltro || corresp.bloco === blocoFiltro;
+                const matchStatus = !statusFiltro || corresp.status === statusFiltro;
+
+                return matchNome && matchBloco && matchStatus;
+            });
+
+            renderizarCorrespondenciasFiltradas(correspondenciasFiltradas);
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtroMorador').value = '';
+            document.getElementById('filtroBloco').value = '';
+            document.getElementById('filtroStatus').value = '';
+            carregarCorrespondencias();
+        }
+
+        // Funções de Dashboard
+        function atualizarDashboard() {
+            atualizarEstatisticas();
+            carregarCorrespondenciasRecentes();
+            carregarResumoBlocos();
         }
 
         function atualizarEstatisticas() {
-            const dados = db.obterTodos();
-            const total = dados.length;
-            const pendentes = dados.filter(c => c.status === 'pendente').length;
-            const entregues = dados.filter(c => c.status === 'entregue').length;
+            const moradores = db.getMoradores();
+            const correspondencias = db.getCorrespondencias();
+            const hoje = new Date().toISOString().split('T')[0];
 
-            document.getElementById('totalCorrespondencias').textContent = total;
+            // Estatísticas básicas
+            document.getElementById('totalMoradores').textContent = moradores.length;
+            document.getElementById('totalCorrespondencias').textContent = correspondencias.length;
+
+            // Correspondências de hoje
+            const recebidasHoje = correspondencias.filter(c => c.dataRecebimento === hoje).length;
+            document.getElementById('recebidasHoje').textContent = recebidasHoje;
+
+            // Pendentes
+            const pendentes = correspondencias.filter(c => c.status === 'Pendente').length;
             document.getElementById('pendentes').textContent = pendentes;
-            document.getElementById('entregues').textContent = entregues;
+
+            // Entregues hoje
+            const entreguesToday = correspondencias.filter(c => 
+                c.status === 'Entregue' && c.dataEntrega === hoje
+            ).length;
+            document.getElementById('entreguesToday').textContent = entreguesToday;
+
+            // Atrasadas (mais de 3 dias)
+            const tresDiasAtras = new Date();
+            tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
+            const atrasadas = correspondencias.filter(c => 
+                c.status === 'Pendente' && new Date(c.dataRecebimento) < tresDiasAtras
+            ).length;
+            document.getElementById('atrasadas').textContent = atrasadas;
+
+            // Mostrar alerta se houver atrasadas
+            const alertaAtrasadas = document.getElementById('alertaAtrasadas');
+            const mensagemAlerta = document.getElementById('mensagemAlerta');
+            if (atrasadas > 0) {
+                alertaAtrasadas.style.display = 'flex';
+                mensagemAlerta.textContent = `Você tem ${atrasadas} correspondência(s) com mais de 3 dias não entregue(s).`;
+            } else {
+                alertaAtrasadas.style.display = 'none';
+            }
+        }
+
+        function carregarCorrespondenciasRecentes() {
+            const correspondencias = db.getCorrespondencias();
+            const container = document.getElementById('correspondenciasRecentes');
+
+            if (correspondencias.length === 0) {
+                container.innerHTML = `
+                    <p style="color: #666; text-align: center; padding: 2rem;">
+                        Nenhuma correspondência registrada ainda
+                    </p>
+                `;
+                return;
+            }
+
+            const recentes = correspondencias
+                .sort((a, b) => new Date(b.dataCadastro) - new Date(a.dataCadastro))
+                .slice(0, 5);
+
+            container.innerHTML = recentes.map(corresp => `
+                <div class="correspondence-item">
+                    <div class="correspondence-info">
+                        <div class="correspondence-name">${corresp.nomeCompleto}</div>
+                        <div class="correspondence-details">
+                            Bloco ${corresp.bloco} - Apto ${corresp.apartamento}
+                        </div>
+                        <div class="correspondence-meta">
+                            ${formatarData(corresp.dataRecebimento)} ${corresp.horaRecebimento ? `às ${corresp.horaRecebimento}` : ''}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="status-badge ${corresp.status === 'Entregue' ? 'status-entregue' : 'status-pendente'}">
+                            ${corresp.status}
+                        </span>
+                        ${corresp.status === 'Pendente' ? `
+                            <button class="notify-btn" onclick="notificarMorador('${corresp.id}')">
+                                <i class="fas fa-bell"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function carregarResumoBlocos() {
+            const moradores = db.getMoradores();
+            const correspondencias = db.getCorrespondencias();
+            const container = document.getElementById('resumoBlocos');
+
+            if (moradores.length === 0) {
+                container.innerHTML = `
+                    <p style="color: #666; text-align: center; padding: 2rem;">
+                        Nenhum morador cadastrado ainda
+                    </p>
+                `;
+                return;
+            }
+
+            // Agrupar por bloco
+            const resumo = {};
+            moradores.forEach(morador => {
+                const bloco = morador.bloco;
+                if (!resumo[bloco]) {
+                    resumo[bloco] = {
+                        moradores: 0,
+                        pendentes: 0,
+                        entregues: 0
+                    };
+                }
+                resumo[bloco].moradores++;
+            });
+
+            correspondencias.forEach(corresp => {
+                const bloco = corresp.bloco;
+                if (resumo[bloco]) {
+                    if (corresp.status === 'Pendente') {
+                        resumo[bloco].pendentes++;
+                    } else {
+                        resumo[bloco].entregues++;
+                    }
+                }
+            });
+
+            container.innerHTML = Object.keys(resumo)
+                .sort()
+                .map(bloco => {
+                    const dados = resumo[bloco];
+                    return `
+                        <div class="correspondence-item">
+                            <div class="correspondence-info">
+                                <div class="correspondence-name">Bloco ${bloco}</div>
+                                <div class="correspondence-details">
+                                    ${dados.moradores} morador(es) cadastrado(s)
+                                </div>
+                                <div class="correspondence-meta">
+                                    ${dados.pendentes} pendente(s) | ${dados.entregues} entregue(s)
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        // Funções utilitárias
+        function atualizarSelectsBlocoApartamento() {
+            const moradores = db.getMoradores();
+            const blocos = [...new Set(moradores.map(m => m.bloco))].sort();
+
+            // Atualizar select de blocos na seção de correspondências
+            const selectBloco = document.getElementById('bloco');
+            const selectFiltroBloco = document.getElementById('filtroBloco');
+
+            [selectBloco, selectFiltroBloco].forEach(select => {
+                if (select) {
+                    const valorAtual = select.value;
+                    select.innerHTML = '<option value="">Selecione...</option>';
+                    blocos.forEach(bloco => {
+                        select.innerHTML += `<option value="${bloco}">${bloco}</option>`;
+                    });
+                    select.value = valorAtual;
+                }
+            });
+
+            atualizarApartamentos();
+        }
+
+        function atualizarApartamentos() {
+            const blocoSelecionado = document.getElementById('bloco').value;
+            const selectApartamento = document.getElementById('apartamento');
+
+            selectApartamento.innerHTML = '<option value="">Selecione...</option>';
+
+            if (blocoSelecionado) {
+                const moradores = db.getMoradores();
+                const apartamentos = moradores
+                    .filter(m => m.bloco === blocoSelecionado)
+                    .map(m => m.apartamento)
+                    .sort((a, b) => {
+                        // Ordenação numérica quando possível
+                        const numA = parseInt(a);
+                        const numB = parseInt(b);
+                        if (!isNaN(numA) && !isNaN(numB)) {
+                            return numA - numB;
+                        }
+                        return a.localeCompare(b);
+                    });
+
+                apartamentos.forEach(apt => {
+                    selectApartamento.innerHTML += `<option value="${apt}">${apt}</option>`;
+                });
+            }
         }
 
         function formatarData(data) {
-            return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
+            if (!data) return '';
+            const date = new Date(data + 'T00:00:00');
+            return date.toLocaleDateString('pt-BR');
         }
 
-        function limparFormulario() {
-            form.reset();
-            document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
+        function limparFormulario(formId) {
+            document.getElementById(formId).reset();
+            
+            if (formId === 'formCorrespondencia') {
+                // Redefir data e hora atuais
+                const hoje = new Date();
+                document.getElementById('dataRecebimento').value = hoje.toISOString().split('T')[0];
+                document.getElementById('horaRecebimento').value = hoje.toTimeString().slice(0, 5);
+                document.getElementById('contadorCaracteres').textContent = '0/500 caracteres';
+            }
         }
 
-        function mostrarAlerta(mensagem, tipo) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${tipo === 'success' ? 'success' : 'danger'}`;
-            alertDiv.textContent = mensagem;
-            
-            alertContainer.appendChild(alertDiv);
-            
-            setTimeout(() => {
-                alertDiv.classList.add('show');
-            }, 10);
+        // Funções de Modal
+        function abrirModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
 
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Funções de Notificação
+        function showToast(message, type = 'success') {
+            // Remover toast existente
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+
+            document.body.appendChild(toast);
+
+            // Mostrar toast
             setTimeout(() => {
-                alertDiv.classList.remove('show');
+                toast.classList.add('show');
+            }, 100);
+
+            // Remover toast após 3 segundos
+            setTimeout(() => {
+                toast.classList.remove('show');
                 setTimeout(() => {
-                    alertContainer.removeChild(alertDiv);
+                    toast.remove();
                 }, 300);
             }, 3000);
         }
 
-        // Inicializar a página
-        document.addEventListener('DOMContentLoaded', function() {
-            renderizarCorrespondencias();
-            atualizarEstatisticas();
+        function enviarNotificacaoWhatsApp(morador, correspondencia) {
+            const mensagem = encodeURIComponent(
+                `Olá ${morador.nome}! 👋\n\n` +
+                `Você tem uma nova correspondência na portaria do condomínio!\n\n` +
+                `📦 Descrição: ${correspondencia.descricao}\n` +
+                `📅 Data de recebimento: ${formatarData(correspondencia.dataRecebimento)}\n` +
+                `🏠 Unidade: Bloco ${correspondencia.bloco} - Apto ${correspondencia.apartamento}\n\n` +
+                `Por favor, retire na portaria em horário comercial.\n\n` +
+                `Atenciosamente,\nPortaria - Condomínio Residencial Algodoeiro`
+            );
+
+            const telefone = morador.telefone.replace(/\D/g, '');
+            const url = `https://wa.me/55${telefone}?text=${mensagem}`;
+            
+            window.open(url, '_blank');
+        }
+
+        function notificarMorador(correspondenciaId) {
+            const correspondencias = db.getCorrespondencias();
+            const correspondencia = correspondencias.find(c => c.id === correspondenciaId);
+            
+            if (!correspondencia) return;
+
+            const moradores = db.getMoradores();
+            const morador = moradores.find(m => m.id === correspondencia.moradorId);
+            
+            if (!morador) return;
+
+            enviarNotificacaoWhatsApp(morador, correspondencia);
+        }
+
+        function notificarAtrasadas() {
+            const correspondencias = db.getCorrespondencias();
+            const tresDiasAtras = new Date();
+            tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
+            
+            const atrasadas = correspondencias.filter(c => 
+                c.status === 'Pendente' && new Date(c.dataRecebimento) < tresDiasAtras
+            );
+
+            if (atrasadas.length === 0) {
+                showToast('Não há correspondências atrasadas para notificar!');
+                return;
+            }
+
+            if (confirm(`Deseja enviar notificação para ${atrasadas.length} correspondência(s) atrasada(s)?`)) {
+                atrasadas.forEach(corresp => {
+                    setTimeout(() => {
+                        notificarMorador(corresp.id);
+                    }, Math.random() * 2000); // Delay aleatório para evitar spam
+                });
+                
+                showToast(`Notificações enviadas para ${atrasadas.length} morador(es)!`);
+            }
+        }
+
+        // Funções de Exportação
+        function exportarDados() {
+            const moradores = db.getMoradores();
+            const correspondencias = db.getCorrespondencias();
+
+            const dados = {
+                moradores,
+                correspondencias,
+                exportadoEm: new Date().toISOString(),
+                versao: '1.0'
+            };
+
+            const dataStr = JSON.stringify(dados, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `correspondencias_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Backup dos dados exportado com sucesso!');
+        }
+
+        function exportarCorrespondencias() {
+            const correspondencias = db.getCorrespondencias();
+
+            if (correspondencias.length === 0) {
+                showToast('Não há correspondências para exportar!', 'error');
+                return;
+            }
+
+            // Criar CSV
+            let csv = 'Data,Hora,Morador,Bloco,Apartamento,Descrição,Status,Entregue Para,Data Entrega,Hora Entrega,Observações Entrega\n';
+            
+            correspondencias.forEach(corresp => {
+                const linha = [
+                    formatarData(corresp.dataRecebimento),
+                    corresp.horaRecebimento || '',
+                    corresp.nomeCompleto,
+                    corresp.bloco,
+                    corresp.apartamento,
+                    corresp.descricao.replace(/,/g, ';'), // Escapar vírgulas
+                    corresp.status,
+                    corresp.entregueAra || '',
+                    corresp.dataEntrega ? formatarData(corresp.dataEntrega) : '',
+                    corresp.horaEntrega || '',
+                    (corresp.observacoesEntrega || '').replace(/,/g, ';')
+                ].join(',');
+                
+                csv += linha + '\n';
+            });
+
+            // Download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `correspondencias_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Relatório de correspondências exportado!');
+        }
+
+        // Função para renderizar correspondências filtradas
+        function renderizarCorrespondenciasFiltradas(correspondencias) {
+            const tbody = document.getElementById('tabelaCorrespondencias');
+            const contador = document.getElementById('contadorCorrespondencias');
+
+            contador.textContent = correspondencias.length;
+
+            if (correspondencias.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhuma correspondência encontrada com os filtros aplicados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Usar a mesma lógica de renderização da função principal
+            const correspondenciasOrdenadas = correspondencias.sort((a, b) => 
+                new Date(b.dataRecebimento) - new Date(a.dataRecebimento)
+            );
+
+            tbody.innerHTML = correspondenciasOrdenadas.map(corresp => {
+                const dataFormatada = formatarData(corresp.dataRecebimento);
+                const horaFormatada = corresp.horaRecebimento || '--:--';
+                
+                let statusClass = corresp.status === 'Entregue' ? 'status-entregue' : 'status-pendente';
+                
+                return `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600;">${dataFormatada}</div>
+                            <div style="font-size: 0.8rem; color: #666;">${horaFormatada}</div>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    ${corresp.nomeCompleto.charAt(0).toUpperCase()}
+                                </div>
+                                ${corresp.nomeCompleto}
+                            </div>
+                        </td>
+                        <td>Bloco ${corresp.bloco} - Apto ${corresp.apartamento}</td>
+                        <td>
+                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                ${corresp.descricao}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge ${statusClass}">${corresp.status}</span>
+                            ${corresp.status === 'Entregue' && corresp.entregueAra ? `
+                                <div class="entrega-details">
+                                    <div class="entrega-info">
+                                        <strong>Entregue para:</strong> ${corresp.entregueAra}
+                                    </div>
+                                    <div class="entrega-info">
+                                        <strong>Data:</strong> ${formatarData(corresp.dataEntrega)} às ${corresp.horaEntrega || '--:--'}
+                                    </div>
+                                    ${corresp.observacoesEntrega ? `
+                                        <div class="entrega-info">
+                                            <strong>Obs:</strong> ${corresp.observacoesEntrega}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </td>
+                        <td>
+                            ${corresp.status === 'Pendente' ? `
+                                <button class="btn btn-sm btn-success" onclick="marcarComoEntregue('${corresp.id}')" title="Marcar como Entregue">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            ` : ''}
+                            <a href="https://wa.me/55${corresp.telefone.replace(/\D/g, '')}" 
+                               class="action-link" target="_blank" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <button class="btn btn-sm btn-danger" onclick="excluirCorrespondencia('${corresp.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Função para renderizar moradores (para filtro)
+        function renderizarMoradores(moradores) {
+            const tbody = document.getElementById('tabelaMoradores');
+            const contador = document.getElementById('contadorMoradores');
+
+            contador.textContent = moradores.length;
+
+            if (moradores.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhum morador encontrado
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = moradores.map(morador => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                ${morador.nome.charAt(0).toUpperCase()}
+                            </div>
+                            ${morador.nome}
+                        </div>
+                    </td>
+                    <td>Bloco ${morador.bloco} - Apto ${morador.apartamento}</td>
+                    <td>${morador.telefone}</td>
+                    <td>
+                        <a href="https://wa.me/55${morador.telefone.replace(/\D/g, '')}" 
+                           class="action-link" target="_blank" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <button class="btn btn-sm btn-primary" onclick="editarMorador('${morador.id}')" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="excluirMorador('${morador.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Função para salvar dados automaticamente
+        function autoSave() {
+            // Os dados já são salvos automaticamente no localStorage
+            // Esta função pode ser usada para implementar salvamento em servidor
+            console.log('Auto-save executado');
+        }
+
+        // Auto-save a cada 30 segundos
+        setInterval(autoSave, 30000);
+
+        // Salvar antes de sair da página
+        window.addEventListener('beforeunload', function(e) {
+            // Os dados já estão salvos no localStorage
+            // mas podemos fazer uma verificação final aqui
+            autoSave();
         });
 
-        // Interceptar o refresh da página para salvar dados
-        window.addEventListener('beforeunload', function() {
-            // Os dados já são salvos automaticamente no localStorage
-            // mas você pode fazer uma chamada para sua API aqui se necessário
+        // Atalhos do teclado
+        document.addEventListener('keydown', function(e) {
+            // Esc para fechar modais
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Ctrl+S para salvar (previne salvamento do navegador)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                autoSave();
+                showToast('Dados salvos automaticamente!');
+            }
         });
     </script>
 </body>
