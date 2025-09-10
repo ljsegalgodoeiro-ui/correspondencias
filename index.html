@@ -1699,8 +1699,13 @@
             });
         }
 
-        // Dados de demonstração (remover em produção)
+        // Dados de demonstração (apenas se não houver dados salvos)
         function adicionarDadosDemonstracao() {
+            // Só adicionar se realmente não há dados
+            if (moradores.length > 0 || correspondencias.length > 0) {
+                return;
+            }
+
             // Moradores de exemplo
             const moradoresDemo = [
                 { id: 1, nome: 'João Silva', telefone: '(11) 99999-1111', bloco: 'A', apartamento: '101', dataCadastro: new Date().toISOString() },
@@ -1769,27 +1774,21 @@
                 }
             ];
 
-            // Adicionar apenas se não houver dados
-            if (moradores.length === 0) {
-                moradores.push(...moradoresDemo);
-            }
-            if (correspondencias.length === 0) {
-                correspondencias.push(...correspondenciasDemo);
-            }
+            // Adicionar dados
+            moradores.push(...moradoresDemo);
+            correspondencias.push(...correspondenciasDemo);
+
+            // Salvar dados localmente
+            salvarDados();
 
             // Atualizar interface
             atualizarDashboard();
             atualizarSelectsBlocos();
             atualizarTabelaMoradores();
             atualizarTabelaCorrespondencias();
+            
+            mostrarToast('Dados de demonstração carregados! Agora você pode testar o sistema.', 'success');
         }
-
-        // Carregar dados de demonstração ao inicializar
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                adicionarDadosDemonstracao();
-            }, 1000);
-        });
     </script>
 </body>
 </html>
