@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Correspondências</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .system-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .condominio-name {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 2rem;
+            background: white;
+            padding: 0 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-item {
+            padding: 1rem 0;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: #1a73e8;
+        }
+
+        .nav-item.active {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .icon-users { background: #e3f2fd; color: #1976d2; }
+        .icon-mail { background: #e8f5e8; color: #2e7d32; }
+        .icon-clock { background: #fff3e0; color: #f57c00; }
+        .icon-alert { background: #ffebee; color: #d32f2f; }
+        .icon-check { background: #f3e5f5; color: #7b1fa2; }
+        .icon-delay { background: #fce4ec; color: #c2185b; }
+
+        .actions-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ff6d00;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e65100;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #856404;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .correspondence-item {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+        }
+
+        .correspondence-item:last-child {
+            border-bottom: none;
+        }
+
+        .correspondence-info {
+            flex: 1;
+        }
+
+        .correspondence-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .correspondence-details {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .correspondence-meta {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 1rem;
+        }
+
+        .status-pendente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-entregue {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .notify-btn {
+            background: #ff6d00;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+
+        .notify-btn:hover {
+            background: #e65100;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filters {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .action-link {
+            color: #25d366;
+            text-decoration: none;
+            font-size: 1.2rem;
+            margin: 0 0.5rem;
+        }
+
+        .action-link:hover {
+            transform: scale(1.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                padding: 0 1rem;
+                overflow-x: auto;
+            }
+            
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-mail-bulk"></i>
+            </div>
+            <div>
+                <div class="system-title">
+                    <i class="fas fa-envelope"></i>
+                    Sistema de Correspondências
+                </div>
+            </div>
+        </div>
+        <div class="condominio-name">
+            Condomínio Residencial Algodoeiro
+        </div>
+    </header>
+
+    <nav class="navigation">
+        <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+            <i class="fas fa-chart-bar"></i>
+            Dashboard
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('correspondencias')">
+            <i class="fas fa-envelope"></i>
+            Correspondências
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('moradores')">
+            <i class="fas fa-users"></i>
+            Moradores
+        </a>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalMoradores">0</h3>
+                        <p>Total<br>Moradores</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-mail">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCorrespondencias">0</h3>
+                        <p>Total<br>Correspondências</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-clock">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="recebidasHoje">0</h3>
+                        <p>Recebidas<br>Hoje</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pendentes">0</h3>
+                        <p>Pendentes</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="entreguesToday">0</h3>
+                        <p>Entregues<br>Hoje</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-delay">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="atrasadas">0</h3>
+                        <p>Atrasadas<br>+3 dias</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Ações Rápidas
+                </h2>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="exportarDados()">
+                        <i class="fas fa-download"></i>
+                        Exportar Dados
+                    </button>
+                    <button class="btn btn-warning" onclick="notificarAtrasadas()">
+                        <i class="fas fa-bell"></i>
+                        Notificar Atrasadas
+                    </button>
+                </div>
+            </div>
+
+            <div class="alert-box" id="alertaAtrasadas" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="mensagemAlerta"></span>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-envelope"></i>
+                        Correspondências Recentes
+                    </div>
+                    <div class="card-content" id="correspondenciasRecentes">
+                        <p style="color: #666; text-align: center; padding: 2rem;">
+                            Nenhuma correspondência registrada ainda
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-building"></i>
+                        Resumo por Bloco
+                    </div>
+                    <div class="card-content" id="resumoBlocos">
+                        <p style="color: #666; text-align: center; padding: 2rem;">
+                            Nenhum morador cadastrado ainda
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Correspondências Section -->
+        <div id="correspondencias-section" class="hidden">
+            <div class="form-container">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope"></i>
+                    Registrar Nova Correspondência
+                </h2>
+                <p style="color: #666; margin-bottom: 2rem;">Cadastre uma nova correspondência recebida na portaria</p>
+
+                <form id="formCorrespondencia">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="dataRecebimento">Data de Recebimento *</label>
+                            <input type="date" id="dataRecebimento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="horaRecebimento">Hora de Recebimento</label>
+                            <input type="time" id="horaRecebimento">
+                        </div>
+                        <div class="form-group">
+                            <label for="bloco">Bloco *</label>
+                            <select id="bloco" required>
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="apartamento">Apartamento *</label>
+                            <select id="apartamento" required>
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="descricao">Descrição do Produto/Correspondência *</label>
+                            <textarea id="descricao" placeholder="Ex: Encomenda dos Correios - Caixa média, Correspondência bancária - Envelope..." maxlength="500" required></textarea>
+                            <small style="color: #666; margin-top: 0.5rem; display: block;">
+                                <span id="contadorCaracteres">0/500 caracteres</span>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="limparFormulario('formCorrespondencia')">
+                            <i class="fas fa-broom"></i>
+                            Limpar Formulário
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Registrar e Notificar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-title">
+                        <i class="fas fa-list"></i>
+                        Correspondências Registradas (<span id="contadorCorrespondencias">0</span>)
+                    </div>
+                    <div>
+                        <button class="btn btn-success" onclick="exportarCorrespondencias()">
+                            <i class="fas fa-file-excel"></i>
+                            Exportar Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <div class="form-group">
+                        <label>Buscar Morador</label>
+                        <input type="text" id="filtroMorador" placeholder="Nome do morador..." onkeyup="filtrarCorrespondencias()">
+                    </div>
+                    <div class="form-group">
+                        <label>Bloco</label>
+                        <select id="filtroBloco" onchange="filtrarCorrespondencias()">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="filtroStatus" onchange="filtrarCorrespondencias()">
+                            <option value="">Todos</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Entregue">Entregue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-secondary" onclick="limparFiltros()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-eraser"></i>
+                            Limpar Filtros
+                        </button>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>DATA/HORA</th>
+                                <th>MORADOR</th>
+                                <th>UNIDADE</th>
+                                <th>DESCRIÇÃO</th>
+                                <th>STATUS</th>
+                                <th>AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCorrespondencias">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                                    Nenhuma correspondência registrada ainda
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Moradores Section -->
+        <div id="moradores-section" class="hidden">
+            <div class="form-container">
+                <h2 class="section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Cadastrar Novo Morador
+                </h2>
+
+                <form id="formMorador">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nomeCompleto">Nome Completo *</label>
+                            <input type="text" id="nomeCompleto" placeholder="Digite o nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone (WhatsApp) *</label>
+                            <input type="tel" id="telefone" placeholder="(11) 99999-9999" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="blocoMorador">Bloco *</label>
+                            <input type="text" id="blocoMorador" placeholder="Ex: A, B, C, 1, 2..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apartamentoMorador">Apartamento *</label>
+                            <input type="text" id="apartamentoMorador" placeholder="Ex: 101, 102, 201..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="limparFormulario('formMorador')">
+                            <i class="fas fa-broom"></i>
+                            Limpar Formulário
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Cadastrar Morador
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-title">
+                        <i class="fas fa-users"></i>
+                        Moradores Cadastrados (<span id="contadorMoradores">0</span>)
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="text" id="buscaMorador" placeholder="Buscar por nome..." style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;" onkeyup="filtrarMoradores()">
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>NOME</th>
+                                <th>UNIDADE</th>
+                                <th>TELEFONE</th>
+                                <th>AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaMoradores">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                                    Nenhum morador cadastrado ainda
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Morador -->
+    <div id="modalEditarMorador" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Morador</h3>
+                <button class="close" onclick="fecharModal('modalEditarMorador')">&times;</button>
+            </div>
+            <form id="formEditarMorador">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="editNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" id="editTelefone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bloco</label>
+                        
