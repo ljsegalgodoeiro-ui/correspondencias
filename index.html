@@ -259,7 +259,7 @@
             padding: 1rem;
             border-bottom: 1px solid #f1f3f4;
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: flex-start;
         }
 
@@ -526,6 +526,20 @@
 
         .toast.error {
             background: #dc3545;
+        }
+
+        .danger-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .danger-btn:hover {
+            background: #c82333;
         }
 
         @media (max-width: 768px) {
@@ -925,3 +939,857 @@
                     </div>
                     <div class="form-group">
                         <label>Bloco</label>
+                        <input type="text" id="editBloco" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Apartamento</label>
+                        <input type="text" id="editApartamento" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalEditarMorador')">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados armazenados em memória
+        let moradores = [];
+        let correspondencias = [];
+        let moradoresFiltrados = [];
+        let correspondenciasFiltradas = [];
+        let editandoMoradorId = null;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Definir data atual
+            document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
+            document.getElementById('horaRecebimento').value = new Date().toTimeString().slice(0, 5);
+
+            // Contador de caracteres
+            const descricaoTextarea = document.getElementById('descricao');
+            const contador = document.getElementById('contadorCaracteres');
+            
+            descricaoTextarea.addEventListener('input', function() {
+                contador.textContent = `${this.value.length}/500 caracteres`;
+            });
+
+            // Event listeners para formulários
+            document.getElementById('formMorador').addEventListener('submit', cadastrarMorador);
+            document.getElementById('formCorrespondencia').addEventListener('submit', registrarCorrespondencia);
+            document.getElementById('formEditarMorador').addEventListener('submit', salvarEdicaoMorador);
+
+            // Event listener para mudança de bloco
+            document.getElementById('bloco').addEventListener('change', atualizarApartamentos);
+
+            // Aplicar máscara no telefone
+            document.getElementById('telefone').addEventListener('input', aplicarMascaraTelefone);
+            document.getElementById('editTelefone').addEventListener('input', aplicarMascaraTelefone);
+
+            atualizarDashboard();
+            atualizarSelectsBlocos();
+        });
+
+        // Navegação
+        function showSection(sectionName) {
+            // Ocultar todas as seções
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('correspondencias-section').classList.add('hidden');
+            document.getElementById('moradores-section').classList.add('hidden');
+
+            // Remover classe active de todos os nav-items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Mostrar seção selecionada
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+
+            // Adicionar classe active ao nav-item selecionado
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Atualizar dados conforme necessário
+            if (sectionName === 'dashboard') {
+                atualizarDashboard();
+            } else if (sectionName === 'correspondencias') {
+                atualizarTabelaCorrespondencias();
+                atualizarSelectsBlocos();
+            } else if (sectionName === 'moradores') {
+                atualizarTabelaMoradores();
+            }
+        }
+
+        // Máscaras
+        function aplicarMascaraTelefone(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                if (value.length < 14) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                }
+            }
+            e.target.value = value;
+        }
+
+        // Cadastro de Moradores
+        function cadastrarMorador(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nomeCompleto').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const bloco = document.getElementById('blocoMorador').value.trim().toUpperCase();
+            const apartamento = document.getElementById('apartamentoMorador').value.trim();
+
+            // Validações
+            if (!nome || !telefone || !bloco || !apartamento) {
+                mostrarToast('Todos os campos são obrigatórios!', 'error');
+                return;
+            }
+
+            // Verificar se a unidade já existe
+            const unidadeExiste = moradores.some(m => 
+                m.bloco === bloco && m.apartamento === apartamento
+            );
+
+            if (unidadeExiste) {
+                mostrarToast('Já existe um morador cadastrado nesta unidade!', 'error');
+                return;
+            }
+
+            const novoMorador = {
+                id: Date.now(),
+                nome,
+                telefone,
+                bloco,
+                apartamento,
+                dataCadastro: new Date().toISOString()
+            };
+
+            moradores.push(novoMorador);
+            document.getElementById('formMorador').reset();
+            
+            atualizarTabelaMoradores();
+            atualizarDashboard();
+            atualizarSelectsBlocos();
+            
+            mostrarToast('Morador cadastrado com sucesso!');
+        }
+
+        function editarMorador(id) {
+            const morador = moradores.find(m => m.id === id);
+            if (!morador) return;
+
+            editandoMoradorId = id;
+            document.getElementById('editNome').value = morador.nome;
+            document.getElementById('editTelefone').value = morador.telefone;
+            document.getElementById('editBloco').value = morador.bloco;
+            document.getElementById('editApartamento').value = morador.apartamento;
+
+            document.getElementById('modalEditarMorador').style.display = 'block';
+        }
+
+        function salvarEdicaoMorador(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('editNome').value.trim();
+            const telefone = document.getElementById('editTelefone').value.trim();
+            const bloco = document.getElementById('editBloco').value.trim().toUpperCase();
+            const apartamento = document.getElementById('editApartamento').value.trim();
+
+            if (!nome || !telefone || !bloco || !apartamento) {
+                mostrarToast('Todos os campos são obrigatórios!', 'error');
+                return;
+            }
+
+            const morador = moradores.find(m => m.id === editandoMoradorId);
+            if (morador) {
+                morador.nome = nome;
+                morador.telefone = telefone;
+                morador.bloco = bloco;
+                morador.apartamento = apartamento;
+                
+                atualizarTabelaMoradores();
+                atualizarDashboard();
+                atualizarSelectsBlocos();
+                fecharModal('modalEditarMorador');
+                mostrarToast('Morador atualizado com sucesso!');
+            }
+        }
+
+        function excluirMorador(id) {
+            if (confirm('Tem certeza que deseja excluir este morador?')) {
+                moradores = moradores.filter(m => m.id !== id);
+                atualizarTabelaMoradores();
+                atualizarDashboard();
+                atualizarSelectsBlocos();
+                mostrarToast('Morador excluído com sucesso!');
+            }
+        }
+
+        function atualizarTabelaMoradores() {
+            const tbody = document.getElementById('tabelaMoradores');
+            const contador = document.getElementById('contadorMoradores');
+            
+            contador.textContent = moradores.length;
+            
+            if (moradores.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhum morador cadastrado ainda
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = moradores.map(morador => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                ${morador.nome.charAt(0).toUpperCase()}
+                            </div>
+                            <strong>${morador.nome}</strong>
+                        </div>
+                    </td>
+                    <td>Bloco ${morador.bloco} - Apt ${morador.apartamento}</td>
+                    <td>${morador.telefone}</td>
+                    <td>
+                        <a href="https://wa.me/55${morador.telefone.replace(/\D/g, '')}" target="_blank" class="action-link" title="Enviar WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <button onclick="editarMorador(${morador.id})" class="btn-secondary" style="padding: 0.25rem 0.5rem; margin: 0 0.25rem;" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="excluirMorador(${morador.id})" class="danger-btn" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Correspondências
+        function registrarCorrespondencia(e) {
+            e.preventDefault();
+            
+            const data = document.getElementById('dataRecebimento').value;
+            const hora = document.getElementById('horaRecebimento').value || '12:00';
+            const bloco = document.getElementById('bloco').value;
+            const apartamento = document.getElementById('apartamento').value;
+            const descricao = document.getElementById('descricao').value.trim();
+
+            if (!data || !bloco || !apartamento || !descricao) {
+                mostrarToast('Todos os campos obrigatórios devem ser preenchidos!', 'error');
+                return;
+            }
+
+            const morador = moradores.find(m => 
+                m.bloco === bloco && m.apartamento === apartamento
+            );
+
+            if (!morador) {
+                mostrarToast('Morador não encontrado para esta unidade!', 'error');
+                return;
+            }
+
+            const novaCorrespondencia = {
+                id: Date.now(),
+                data,
+                hora,
+                moradorId: morador.id,
+                morador: morador.nome,
+                bloco,
+                apartamento,
+                descricao,
+                status: 'Pendente',
+                dataRegistro: new Date().toISOString()
+            };
+
+            correspondencias.unshift(novaCorrespondencia);
+            document.getElementById('formCorrespondencia').reset();
+            document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
+            document.getElementById('horaRecebimento').value = new Date().toTimeString().slice(0, 5);
+            document.getElementById('contadorCaracteres').textContent = '0/500 caracteres';
+            
+            atualizarTabelaCorrespondencias();
+            atualizarDashboard();
+            
+            // Enviar notificação WhatsApp
+            const mensagem = `Olá ${morador.nome}! Você tem uma correspondência na portaria: ${descricao}. Data: ${formatarData(data)} ${hora}`;
+            const urlWhatsApp = `https://wa.me/55${morador.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWhatsApp, '_blank');
+            
+            mostrarToast('Correspondência registrada e notificação enviada!');
+        }
+
+        function marcarComoEntregue(id) {
+            const correspondencia = correspondencias.find(c => c.id === id);
+            if (correspondencia) {
+                correspondencia.status = 'Entregue';
+                correspondencia.dataEntrega = new Date().toISOString();
+                atualizarTabelaCorrespondencias();
+                atualizarDashboard();
+                mostrarToast('Correspondência marcada como entregue!');
+            }
+        }
+
+        function reenviarNotificacao(id) {
+            const correspondencia = correspondencias.find(c => c.id === id);
+            if (!correspondencia) return;
+
+            const morador = moradores.find(m => m.id === correspondencia.moradorId);
+            if (!morador) return;
+
+            const mensagem = `LEMBRETE: Você tem uma correspondência pendente na portaria: ${correspondencia.descricao}. Data: ${formatarData(correspondencia.data)} ${correspondencia.hora}`;
+            const urlWhatsApp = `https://wa.me/55${morador.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWhatsApp, '_blank');
+            mostrarToast('Notificação reenviada!');
+        }
+
+        function excluirCorrespondencia(id) {
+            if (confirm('Tem certeza que deseja excluir esta correspondência?')) {
+                correspondencias = correspondencias.filter(c => c.id !== id);
+                atualizarTabelaCorrespondencias();
+                atualizarDashboard();
+                mostrarToast('Correspondência excluída com sucesso!');
+            }
+        }
+
+        function atualizarTabelaCorrespondencias() {
+            const tbody = document.getElementById('tabelaCorrespondencias');
+            const contador = document.getElementById('contadorCorrespondencias');
+            
+            contador.textContent = correspondencias.length;
+            
+            if (correspondencias.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhuma correspondência registrada ainda
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = correspondencias.map(corr => {
+                const morador = moradores.find(m => m.id === corr.moradorId);
+                const diasAtrasada = calcularDiasAtrasada(corr.data);
+                const isAtrasada = corr.status === 'Pendente' && diasAtrasada > 3;
+                
+                return `
+                    <tr ${isAtrasada ? 'style="background-color: #fff5f5;"' : ''}>
+                        <td>
+                            ${formatarData(corr.data)}<br>
+                            <small style="color: #666;">${corr.hora}</small>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    ${corr.morador.charAt(0).toUpperCase()}
+                                </div>
+                                <strong>${corr.morador}</strong>
+                            </div>
+                        </td>
+                        <td>Bloco ${corr.bloco}<br>Apt ${corr.apartamento}</td>
+                        <td style="max-width: 200px; word-wrap: break-word;">${corr.descricao}</td>
+                        <td>
+                            <span class="status-badge ${corr.status === 'Entregue' ? 'status-entregue' : 'status-pendente'}">
+                                ${corr.status}
+                            </span>
+                            ${isAtrasada ? '<br><small style="color: #d32f2f;">Atrasada</small>' : ''}
+                        </td>
+                        <td>
+                            ${corr.status === 'Pendente' ? `
+                                <button onclick="marcarComoEntregue(${corr.id})" class="btn btn-success" style="padding: 0.25rem 0.5rem; margin: 0.1rem;" title="Marcar como entregue">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button onclick="reenviarNotificacao(${corr.id})" class="notify-btn" style="padding: 0.25rem 0.5rem; margin: 0.1rem;" title="Reenviar notificação">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                            ` : ''}
+                            <button onclick="excluirCorrespondencia(${corr.id})" class="danger-btn" style="margin: 0.1rem;" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Atualização de selects
+        function atualizarSelectsBlocos() {
+            const blocos = [...new Set(moradores.map(m => m.bloco))].sort();
+            
+            const selectBloco = document.getElementById('bloco');
+            const selectFiltroBloco = document.getElementById('filtroBloco');
+            
+            // Limpar e recriar opções
+            selectBloco.innerHTML = '<option value="">Selecione...</option>';
+            selectFiltroBloco.innerHTML = '<option value="">Todos</option>';
+            
+            blocos.forEach(bloco => {
+                selectBloco.innerHTML += `<option value="${bloco}">Bloco ${bloco}</option>`;
+                selectFiltroBloco.innerHTML += `<option value="${bloco}">Bloco ${bloco}</option>`;
+            });
+        }
+
+        function atualizarApartamentos() {
+            const blocoSelecionado = document.getElementById('bloco').value;
+            const selectApartamento = document.getElementById('apartamento');
+            
+            selectApartamento.innerHTML = '<option value="">Selecione...</option>';
+            
+            if (blocoSelecionado) {
+                const apartamentos = moradores
+                    .filter(m => m.bloco === blocoSelecionado)
+                    .map(m => m.apartamento)
+                    .sort();
+                
+                apartamentos.forEach(apt => {
+                    selectApartamento.innerHTML += `<option value="${apt}">Apartamento ${apt}</option>`;
+                });
+            }
+        }
+
+        // Dashboard
+        function atualizarDashboard() {
+            const hoje = new Date().toISOString().split('T')[0];
+            
+            // Estatísticas básicas
+            document.getElementById('totalMoradores').textContent = moradores.length;
+            document.getElementById('totalCorrespondencias').textContent = correspondencias.length;
+            
+            const recebidasHoje = correspondencias.filter(c => c.data === hoje).length;
+            document.getElementById('recebidasHoje').textContent = recebidasHoje;
+            
+            const pendentes = correspondencias.filter(c => c.status === 'Pendente').length;
+            document.getElementById('pendentes').textContent = pendentes;
+            
+            const entreguesToday = correspondencias.filter(c => 
+                c.status === 'Entregue' && c.dataEntrega && c.dataEntrega.split('T')[0] === hoje
+            ).length;
+            document.getElementById('entreguesToday').textContent = entreguesToday;
+            
+            const atrasadas = correspondencias.filter(c => 
+                c.status === 'Pendente' && calcularDiasAtrasada(c.data) > 3
+            ).length;
+            document.getElementById('atrasadas').textContent = atrasadas;
+            
+            // Alerta de atrasadas
+            const alertaAtrasadas = document.getElementById('alertaAtrasadas');
+            const mensagemAlerta = document.getElementById('mensagemAlerta');
+            
+            if (atrasadas > 0) {
+                alertaAtrasadas.style.display = 'flex';
+                mensagemAlerta.textContent = `Atenção! Existem ${atrasadas} correspondência(s) com mais de 3 dias sem retirada.`;
+            } else {
+                alertaAtrasadas.style.display = 'none';
+            }
+            
+            atualizarCorrespondenciasRecentes();
+            atualizarResumoBlocos();
+        }
+
+        function atualizarCorrespondenciasRecentes() {
+            const container = document.getElementById('correspondenciasRecentes');
+            const recentes = correspondencias.slice(0, 5);
+            
+            if (recentes.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">Nenhuma correspondência registrada ainda</p>';
+                return;
+            }
+            
+            container.innerHTML = recentes.map(corr => `
+                <div class="correspondence-item">
+                    <div class="correspondence-info">
+                        <div class="correspondence-name">${corr.morador}</div>
+                        <div class="correspondence-details">Bloco ${corr.bloco} - Apt ${corr.apartamento}</div>
+                        <div class="correspondence-meta">${formatarData(corr.data)} ${corr.hora}</div>
+                    </div>
+                    <span class="status-badge ${corr.status === 'Entregue' ? 'status-entregue' : 'status-pendente'}">
+                        ${corr.status}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function atualizarResumoBlocos() {
+            const container = document.getElementById('resumoBlocos');
+            const blocos = [...new Set(moradores.map(m => m.bloco))].sort();
+            
+            if (blocos.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">Nenhum morador cadastrado ainda</p>';
+                return;
+            }
+            
+            container.innerHTML = blocos.map(bloco => {
+                const moradoresBloco = moradores.filter(m => m.bloco === bloco).length;
+                const correspondenciasBloco = correspondencias.filter(c => c.bloco === bloco).length;
+                const pendentesBloco = correspondencias.filter(c => c.bloco === bloco && c.status === 'Pendente').length;
+                
+                return `
+                    <div class="correspondence-item">
+                        <div class="correspondence-info">
+                            <div class="correspondence-name">Bloco ${bloco}</div>
+                            <div class="correspondence-details">${moradoresBloco} moradores</div>
+                            <div class="correspondence-meta">${correspondenciasBloco} correspondências total</div>
+                        </div>
+                        ${pendentesBloco > 0 ? `<span class="status-badge status-pendente">${pendentesBloco} pendentes</span>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filtros
+        function filtrarMoradores() {
+            const busca = document.getElementById('buscaMorador').value.toLowerCase();
+            const tbody = document.getElementById('tabelaMoradores');
+            
+            const moradoresFiltrados = moradores.filter(morador => 
+                morador.nome.toLowerCase().includes(busca)
+            );
+            
+            if (moradoresFiltrados.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhum morador encontrado
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = moradoresFiltrados.map(morador => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                ${morador.nome.charAt(0).toUpperCase()}
+                            </div>
+                            <strong>${morador.nome}</strong>
+                        </div>
+                    </td>
+                    <td>Bloco ${morador.bloco} - Apt ${morador.apartamento}</td>
+                    <td>${morador.telefone}</td>
+                    <td>
+                        <a href="https://wa.me/55${morador.telefone.replace(/\D/g, '')}" target="_blank" class="action-link" title="Enviar WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <button onclick="editarMorador(${morador.id})" class="btn-secondary" style="padding: 0.25rem 0.5rem; margin: 0 0.25rem;" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="excluirMorador(${morador.id})" class="danger-btn" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarCorrespondencias() {
+            const filtroMorador = document.getElementById('filtroMorador').value.toLowerCase();
+            const filtroBloco = document.getElementById('filtroBloco').value;
+            const filtroStatus = document.getElementById('filtroStatus').value;
+            
+            let correspondenciasFiltradas = correspondencias.filter(corr => {
+                const matchMorador = !filtroMorador || corr.morador.toLowerCase().includes(filtroMorador);
+                const matchBloco = !filtroBloco || corr.bloco === filtroBloco;
+                const matchStatus = !filtroStatus || corr.status === filtroStatus;
+                
+                return matchMorador && matchBloco && matchStatus;
+            });
+            
+            const tbody = document.getElementById('tabelaCorrespondencias');
+            
+            if (correspondenciasFiltradas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                            Nenhuma correspondência encontrada com os filtros selecionados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = correspondenciasFiltradas.map(corr => {
+                const morador = moradores.find(m => m.id === corr.moradorId);
+                const diasAtrasada = calcularDiasAtrasada(corr.data);
+                const isAtrasada = corr.status === 'Pendente' && diasAtrasada > 3;
+                
+                return `
+                    <tr ${isAtrasada ? 'style="background-color: #fff5f5;"' : ''}>
+                        <td>
+                            ${formatarData(corr.data)}<br>
+                            <small style="color: #666;">${corr.hora}</small>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    ${corr.morador.charAt(0).toUpperCase()}
+                                </div>
+                                <strong>${corr.morador}</strong>
+                            </div>
+                        </td>
+                        <td>Bloco ${corr.bloco}<br>Apt ${corr.apartamento}</td>
+                        <td style="max-width: 200px; word-wrap: break-word;">${corr.descricao}</td>
+                        <td>
+                            <span class="status-badge ${corr.status === 'Entregue' ? 'status-entregue' : 'status-pendente'}">
+                                ${corr.status}
+                            </span>
+                            ${isAtrasada ? '<br><small style="color: #d32f2f;">Atrasada</small>' : ''}
+                        </td>
+                        <td>
+                            ${corr.status === 'Pendente' ? `
+                                <button onclick="marcarComoEntregue(${corr.id})" class="btn btn-success" style="padding: 0.25rem 0.5rem; margin: 0.1rem;" title="Marcar como entregue">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button onclick="reenviarNotificacao(${corr.id})" class="notify-btn" style="padding: 0.25rem 0.5rem; margin: 0.1rem;" title="Reenviar notificação">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                            ` : ''}
+                            <button onclick="excluirCorrespondencia(${corr.id})" class="danger-btn" style="margin: 0.1rem;" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtroMorador').value = '';
+            document.getElementById('filtroBloco').value = '';
+            document.getElementById('filtroStatus').value = '';
+            filtrarCorrespondencias();
+        }
+
+        // Ações rápidas
+        function notificarAtrasadas() {
+            const atrasadas = correspondencias.filter(c => 
+                c.status === 'Pendente' && calcularDiasAtrasada(c.data) > 3
+            );
+            
+            if (atrasadas.length === 0) {
+                mostrarToast('Não há correspondências atrasadas no momento.', 'error');
+                return;
+            }
+            
+            let count = 0;
+            atrasadas.forEach(corr => {
+                const morador = moradores.find(m => m.id === corr.moradorId);
+                if (morador) {
+                    const diasAtrasada = calcularDiasAtrasada(corr.data);
+                    const mensagem = `🚨 URGENTE: Sua correspondência está há ${diasAtrasada} dias na portaria! Descrição: ${corr.descricao}. Por favor, retire o quanto antes.`;
+                    const urlWhatsApp = `https://wa.me/55${morador.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
+                    window.open(urlWhatsApp, '_blank');
+                    count++;
+                }
+            });
+            
+            mostrarToast(`${count} notificação(ões) de correspondências atrasadas enviadas!`);
+        }
+
+        function exportarDados() {
+            const dadosExport = {
+                moradores,
+                correspondencias,
+                dataExportacao: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(dadosExport, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `correspondencias_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            mostrarToast('Dados exportados com sucesso!');
+        }
+
+        function exportarCorrespondencias() {
+            if (correspondencias.length === 0) {
+                mostrarToast('Não há correspondências para exportar!', 'error');
+                return;
+            }
+            
+            let csv = 'Data,Hora,Morador,Bloco,Apartamento,Descrição,Status,Data Entrega\n';
+            
+            correspondencias.forEach(corr => {
+                const dataEntrega = corr.dataEntrega ? new Date(corr.dataEntrega).toLocaleDateString('pt-BR') : '';
+                csv += `"${formatarData(corr.data)}","${corr.hora}","${corr.morador}","${corr.bloco}","${corr.apartamento}","${corr.descricao}","${corr.status}","${dataEntrega}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `correspondencias_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            mostrarToast('Correspondências exportadas para CSV!');
+        }
+
+        // Utilitários
+        function formatarData(dataString) {
+            const data = new Date(dataString + 'T00:00:00');
+            return data.toLocaleDateString('pt-BR');
+        }
+
+        function calcularDiasAtrasada(dataString) {
+            const dataCorrespondencia = new Date(dataString + 'T00:00:00');
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            
+            const diffTime = hoje - dataCorrespondencia;
+            return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function limparFormulario(formId) {
+            document.getElementById(formId).reset();
+            if (formId === 'formCorrespondencia') {
+                document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
+                document.getElementById('horaRecebimento').value = new Date().toTimeString().slice(0, 5);
+                document.getElementById('contadorCaracteres').textContent = '0/500 caracteres';
+            }
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            editandoMoradorId = null;
+        }
+
+        function mostrarToast(mensagem, tipo = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo === 'error' ? 'error' : ''}`;
+            toast.innerHTML = `
+                <i class="fas ${tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                ${mensagem}
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    editandoMoradorId = null;
+                }
+            });
+        }
+
+        // Dados de demonstração (remover em produção)
+        function adicionarDadosDemonstracao() {
+            // Moradores de exemplo
+            const moradoresDemo = [
+                { id: 1, nome: 'João Silva', telefone: '(11) 99999-1111', bloco: 'A', apartamento: '101', dataCadastro: new Date().toISOString() },
+                { id: 2, nome: 'Maria Santos', telefone: '(11) 99999-2222', bloco: 'A', apartamento: '102', dataCadastro: new Date().toISOString() },
+                { id: 3, nome: 'Pedro Oliveira', telefone: '(11) 99999-3333', bloco: 'B', apartamento: '201', dataCadastro: new Date().toISOString() },
+                { id: 4, nome: 'Ana Costa', telefone: '(11) 99999-4444', bloco: 'B', apartamento: '202', dataCadastro: new Date().toISOString() },
+                { id: 5, nome: 'Carlos Pereira', telefone: '(11) 99999-5555', bloco: 'C', apartamento: '301', dataCadastro: new Date().toISOString() }
+            ];
+
+            // Correspondências de exemplo
+            const hoje = new Date().toISOString().split('T')[0];
+            const ontem = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+            const anteontem = new Date(Date.now() - 172800000).toISOString().split('T')[0];
+            const semanaPassada = new Date(Date.now() - 604800000).toISOString().split('T')[0];
+
+            const correspondenciasDemo = [
+                {
+                    id: 1,
+                    data: hoje,
+                    hora: '10:30',
+                    moradorId: 1,
+                    morador: 'João Silva',
+                    bloco: 'A',
+                    apartamento: '101',
+                    descricao: 'Encomenda dos Correios - Caixa média',
+                    status: 'Pendente',
+                    dataRegistro: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    data: ontem,
+                    hora: '14:15',
+                    moradorId: 2,
+                    morador: 'Maria Santos',
+                    bloco: 'A',
+                    apartamento: '102',
+                    descricao: 'Correspondência bancária - Envelope',
+                    status: 'Entregue',
+                    dataRegistro: new Date().toISOString(),
+                    dataEntrega: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    data: semanaPassada,
+                    hora: '09:00',
+                    moradorId: 3,
+                    morador: 'Pedro Oliveira',
+                    bloco: 'B',
+                    apartamento: '201',
+                    descricao: 'Encomenda Mercado Livre - Caixa grande',
+                    status: 'Pendente',
+                    dataRegistro: new Date().toISOString()
+                },
+                {
+                    id: 4,
+                    data: anteontem,
+                    hora: '16:45',
+                    moradorId: 4,
+                    morador: 'Ana Costa',
+                    bloco: 'B',
+                    apartamento: '202',
+                    descricao: 'Revista em casa - Envelope',
+                    status: 'Entregue',
+                    dataRegistro: new Date().toISOString(),
+                    dataEntrega: new Date().toISOString()
+                }
+            ];
+
+            // Adicionar apenas se não houver dados
+            if (moradores.length === 0) {
+                moradores.push(...moradoresDemo);
+            }
+            if (correspondencias.length === 0) {
+                correspondencias.push(...correspondenciasDemo);
+            }
+
+            // Atualizar interface
+            atualizarDashboard();
+            atualizarSelectsBlocos();
+            atualizarTabelaMoradores();
+            atualizarTabelaCorrespondencias();
+        }
+
+        // Carregar dados de demonstração ao inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                adicionarDadosDemonstracao();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
