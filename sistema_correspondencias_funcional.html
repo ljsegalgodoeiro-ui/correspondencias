@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Correspondências</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #1a73e8;
+            --primary-hover-color: #1557b0;
+            --success-color: #28a745;
+            --success-hover-color: #218838;
+            --danger-color: #dc3545;
+            --danger-hover-color: #c82333;
+            --warning-color: #ff6d00;
+            --warning-hover-color: #e65100;
+            --light-bg-color: #f8f9fa;
+            --white-bg-color: #ffffff;
+            --text-color: #333;
+            --secondary-text-color: #666;
+            --border-color: #e9ecef;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: var(--light-bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
         .header {
-            background: white;
-            border-bottom: 1px solid #e9ecef;
+            background: var(--white-bg-color);
             padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .logo-section {
@@ -42,7 +62,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--white-bg-color);
+            font-size: 1.5rem;
         }
 
         .system-title {
@@ -51,20 +72,20 @@
             gap: 0.5rem;
             font-size: 1.2rem;
             font-weight: 600;
-            color: #1a73e8;
+            color: var(--primary-color);
         }
 
         .condominio-name {
-            color: #666;
+            color: var(--secondary-text-color);
             font-size: 0.9rem;
         }
 
         .navigation {
             display: flex;
             gap: 2rem;
-            background: white;
+            background: var(--white-bg-color);
             padding: 0 2rem;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .nav-item {
@@ -74,24 +95,42 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #666;
+            color: var(--secondary-text-color);
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
         .nav-item:hover {
-            color: #1a73e8;
+            color: var(--primary-color);
         }
 
         .nav-item.active {
-            color: #1a73e8;
-            border-bottom-color: #1a73e8;
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
         }
 
         .stats-grid {
@@ -102,10 +141,10 @@
         }
 
         .stat-card {
-            background: white;
+            background: var(--white-bg-color);
             padding: 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: var(--card-shadow);
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -114,7 +153,7 @@
 
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .stat-icon {
@@ -134,196 +173,35 @@
         }
 
         .stat-info p {
-            color: #666;
+            color: var(--secondary-text-color);
             font-size: 0.9rem;
         }
 
-        .icon-users { background: #e3f2fd; color: #1976d2; }
-        .icon-mail { background: #e8f5e8; color: #2e7d32; }
-        .icon-clock { background: #fff3e0; color: #f57c00; }
-        .icon-alert { background: #ffebee; color: #d32f2f; }
-        .icon-check { background: #f3e5f5; color: #7b1fa2; }
-        .icon-delay { background: #fce4ec; color: #c2185b; }
-
-        .actions-section {
-            margin-bottom: 2rem;
+        .icon-users {
+            background: #e3f2fd;
+            color: #1976d2;
         }
 
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #333;
+        .icon-mail {
+            background: #e8f5e8;
+            color: #2e7d32;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        .icon-clock {
+            background: #fff3e0;
+            color: #f57c00;
         }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
+        .icon-alert {
+            background: #ffebee;
+            color: #d32f2f;
         }
 
-        .btn-primary {
-            background: #1a73e8;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1557b0;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
-
-        .btn-warning {
-            background: #ff6d00;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #e65100;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #666;
-            border: 1px solid #ddd;
-        }
-
-        .btn-secondary:hover {
-            background: #e9ecef;
-        }
-
-        .alert-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #856404;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .content-card {
-            background: white;
+        .form-container,
+        .table-container {
+            background: var(--white-bg-color);
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        .correspondence-item {
-            padding: 1rem;
-            border-bottom: 1px solid #f1f3f4;
-            display: flex;
-            justify-content: between;
-            align-items: flex-start;
-        }
-
-        .correspondence-item:last-child {
-            border-bottom: none;
-        }
-
-        .correspondence-info {
-            flex: 1;
-        }
-
-        .correspondence-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .correspondence-details {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .correspondence-meta {
-            color: #999;
-            font-size: 0.8rem;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 16px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-left: 1rem;
-        }
-
-        .status-pendente {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-entregue {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .notify-btn {
-            background: #ff6d00;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin-left: 1rem;
-        }
-
-        .notify-btn:hover {
-            background: #e65100;
-        }
-
-        .form-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: var(--card-shadow);
             padding: 2rem;
             margin-bottom: 2rem;
         }
@@ -344,28 +222,28 @@
             grid-column: span 2;
         }
 
-        label {
-            font-weight: 500;
+        .form-group label {
             margin-bottom: 0.5rem;
-            color: #333;
+            font-weight: 600;
+            color: var(--text-color);
         }
 
-        input, select, textarea {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 0.9rem;
             transition: border-color 0.3s ease;
         }
 
-        input:focus, select:focus, textarea:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
-            border-color: #1a73e8;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
+            border-color: var(--primary-color);
         }
 
         .form-actions {
@@ -373,19 +251,66 @@
             gap: 1rem;
             justify-content: flex-end;
             padding-top: 1rem;
-            border-top: 1px solid #e9ecef;
+            border-top: 1px solid var(--border-color);
         }
 
-        .table-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white-bg-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: var(--white-bg-color);
+        }
+
+        .btn-success:hover {
+            background: var(--success-hover-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--light-bg-color);
+            color: var(--secondary-text-color);
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: var(--white-bg-color);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover-color);
+            transform: translateY(-2px);
         }
 
         .table-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -399,9 +324,9 @@
         }
 
         .filters {
+            background: var(--light-bg-color);
             padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-            background: #f8f9fa;
+            border-bottom: 1px solid var(--border-color);
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
@@ -412,55 +337,58 @@
             border-collapse: collapse;
         }
 
-        .table th {
-            background: #f8f9fa;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 1px solid #e9ecef;
-        }
-
+        .table th,
         .table td {
             padding: 1rem;
-            border-bottom: 1px solid #f1f3f4;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--light-bg-color);
+            font-weight: 600;
+            color: var(--secondary-text-color);
         }
 
         .table tbody tr:hover {
-            background: #f8f9fa;
+            background: #f1f3f4;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: #e3f2fd;
-            color: #1976d2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
+        .status-pendente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-entregue {
+            background: #d4edda;
+            color: #155724;
         }
 
         .action-link {
-            color: #25d366;
+            color: var(--primary-color);
             text-decoration: none;
             font-size: 1.2rem;
             margin: 0 0.5rem;
+            transition: transform 0.2s ease;
         }
 
         .action-link:hover {
             transform: scale(1.2);
         }
 
-        .hidden {
-            display: none;
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary-text-color);
+            font-style: italic;
         }
 
         .modal {
@@ -475,7 +403,7 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--white-bg-color);
             margin: 10% auto;
             padding: 2rem;
             border-radius: 12px;
@@ -490,7 +418,7 @@
             align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .modal-title {
@@ -503,18 +431,18 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: var(--secondary-text-color);
         }
 
         .toast {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #28a745;
-            color: white;
+            background: var(--success-color);
+            color: var(--white-bg-color);
             padding: 1rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 2000;
             transform: translateX(400px);
             transition: transform 0.3s ease;
@@ -525,62 +453,46 @@
         }
 
         .toast.error {
-            background: #dc3545;
+            background: var(--danger-color);
         }
 
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .navigation {
-                padding: 0 1rem;
-                overflow-x: auto;
-            }
-            
-            .header {
-                padding: 1rem;
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
+
+            .stats-grid,
+            .form-grid,
             .filters {
                 grid-template-columns: 1fr;
             }
-            
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
             .table-container {
                 overflow-x: auto;
             }
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="logo-section">
             <div class="logo">
-                <i class="fas fa-mail-bulk"></i>
+                <i class="fas fa-envelope"></i>
             </div>
             <div>
                 <div class="system-title">
-                    <i class="fas fa-envelope"></i>
                     Sistema de Correspondências
                 </div>
+                <div class="condominio-name">
+                    Condomínio Residencial Algodoeiro
+                </div>
             </div>
-        </div>
-        <div class="condominio-name">
-            Condomínio Residencial Algodoeiro
         </div>
     </header>
 
@@ -600,8 +512,7 @@
     </nav>
 
     <div class="container">
-        <!-- Dashboard Section -->
-        <div id="dashboard-section">
+        <div id="dashboard-section" class="content">
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon icon-users">
@@ -609,128 +520,61 @@
                     </div>
                     <div class="stat-info">
                         <h3 id="totalMoradores">0</h3>
-                        <p>Total<br>Moradores</p>
+                        <p>Total Moradores</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-icon icon-mail">
                         <i class="fas fa-envelope"></i>
                     </div>
                     <div class="stat-info">
                         <h3 id="totalCorrespondencias">0</h3>
-                        <p>Total<br>Correspondências</p>
+                        <p>Total Correspondências</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-icon icon-clock">
                         <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="recebidasHoje">0</h3>
-                        <p>Recebidas<br>Hoje</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon icon-alert">
-                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="stat-info">
                         <h3 id="pendentes">0</h3>
                         <p>Pendentes</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon icon-check">
+                    <div class="stat-icon icon-alert">
                         <i class="fas fa-check"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="entreguesToday">0</h3>
-                        <p>Entregues<br>Hoje</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon icon-delay">
-                        <i class="fas fa-hourglass-half"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="atrasadas">0</h3>
-                        <p>Atrasadas<br>+3 dias</p>
+                        <h3 id="entregues">0</h3>
+                        <p>Entregues</p>
                     </div>
                 </div>
             </div>
-
-            <div class="actions-section">
-                <h2 class="section-title">
-                    <i class="fas fa-bolt"></i>
-                    Ações Rápidas
-                </h2>
-                <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="exportarDados()">
-                        <i class="fas fa-download"></i>
-                        Exportar Dados
-                    </button>
-                    <button class="btn btn-warning" onclick="notificarAtrasadas()">
-                        <i class="fas fa-bell"></i>
-                        Notificar Atrasadas
-                    </button>
-                </div>
             </div>
 
-            <div class="alert-box" id="alertaAtrasadas" style="display: none;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span id="mensagemAlerta"></span>
-            </div>
-
-            <div class="content-grid">
-                <div class="content-card">
-                    <div class="card-header">
-                        <i class="fas fa-envelope"></i>
-                        Correspondências Recentes
-                    </div>
-                    <div class="card-content" id="correspondenciasRecentes">
-                        <p style="color: #666; text-align: center; padding: 2rem;">
-                            Nenhuma correspondência registrada ainda
-                        </p>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <div class="card-header">
-                        <i class="fas fa-building"></i>
-                        Resumo por Bloco
-                    </div>
-                    <div class="card-content" id="resumoBlocos">
-                        <p style="color: #666; text-align: center; padding: 2rem;">
-                            Nenhum morador cadastrado ainda
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Correspondências Section -->
-        <div id="correspondencias-section" class="hidden">
+        <div id="correspondencias-section" class="content hidden">
             <div class="form-container">
                 <h2 class="section-title">
-                    <i class="fas fa-envelope"></i>
+                    <i class="fas fa-envelope-open-text"></i>
                     Registrar Nova Correspondência
                 </h2>
-                <p style="color: #666; margin-bottom: 2rem;">Cadastre uma nova correspondência recebida na portaria</p>
-
                 <form id="formCorrespondencia">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="dataRecebimento">Data de Recebimento *</label>
-                            <input type="date" id="dataRecebimento" required>
+                            <label for="destinatario">Destinatário *</label>
+                            <input type="text" id="destinatario" required>
                         </div>
                         <div class="form-group">
-                            <label for="horaRecebimento">Hora de Recebimento</label>
-                            <input type="time" id="horaRecebimento">
+                            <label for="tipo">Tipo de Correspondência *</label>
+                            <select id="tipo" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="carta">Carta</option>
+                                <option value="encomenda">Encomenda</option>
+                                <option value="sedex">Sedex</option>
+                                <option value="ar">AR (Aviso de Recebimento)</option>
+                                <option value="outros">Outros</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="bloco">Bloco *</label>
@@ -745,22 +589,16 @@
                             </select>
                         </div>
                         <div class="form-group full-width">
-                            <label for="descricao">Descrição do Produto/Correspondência *</label>
-                            <textarea id="descricao" placeholder="Ex: Encomenda dos Correios - Caixa média, Correspondência bancária - Envelope..." maxlength="500" required></textarea>
-                            <small style="color: #666; margin-top: 0.5rem; display: block;">
-                                <span id="contadorCaracteres">0/500 caracteres</span>
-                            </small>
+                            <label for="observacoes">Observações</label>
+                            <textarea id="observacoes" placeholder="Informações adicionais sobre a correspondência"></textarea>
                         </div>
                     </div>
-
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="limparFormulario('formCorrespondencia')">
-                            <i class="fas fa-broom"></i>
-                            Limpar Formulário
+                            <i class="fas fa-broom"></i> Limpar
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus"></i>
-                            Registrar e Notificar
+                            <i class="fas fa-plus"></i> Registrar
                         </button>
                     </div>
                 </form>
@@ -769,17 +607,14 @@
             <div class="table-container">
                 <div class="table-header">
                     <div class="table-title">
-                        <i class="fas fa-list"></i>
-                        Correspondências Registradas (<span id="contadorCorrespondencias">0</span>)
+                        <i class="fas fa-list"></i> Correspondências Registradas (<span id="contadorCorrespondencias">0</span>)
                     </div>
                     <div>
                         <button class="btn btn-success" onclick="exportarCorrespondencias()">
-                            <i class="fas fa-file-excel"></i>
-                            Exportar Excel
+                            <i class="fas fa-file-excel"></i> Exportar Excel
                         </button>
                     </div>
                 </div>
-
                 <div class="filters">
                     <div class="form-group">
                         <label>Buscar Morador</label>
@@ -800,30 +635,27 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-secondary" onclick="limparFiltros()" style="margin-top: 1.5rem;">
-                            <i class="fas fa-eraser"></i>
-                            Limpar Filtros
+                        <button type="button" class="btn btn-secondary" onclick="limparFiltros()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-eraser"></i> Limpar Filtros
                         </button>
                     </div>
                 </div>
-
                 <div style="overflow-x: auto;">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>DATA/HORA</th>
+                                <th>DATA</th>
                                 <th>MORADOR</th>
                                 <th>UNIDADE</th>
-                                <th>DESCRIÇÃO</th>
+                                <th>TIPO</th>
+                                <th>OBSERVAÇÕES</th>
                                 <th>STATUS</th>
                                 <th>AÇÕES</th>
                             </tr>
                         </thead>
                         <tbody id="tabelaCorrespondencias">
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
-                                    Nenhuma correspondência registrada ainda
-                                </td>
+                                <td colspan="7" style="text-align: center; padding: 2rem; color: #666;">Nenhuma correspondência registrada ainda.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -831,14 +663,12 @@
             </div>
         </div>
 
-        <!-- Moradores Section -->
-        <div id="moradores-section" class="hidden">
+        <div id="moradores-section" class="content hidden">
             <div class="form-container">
                 <h2 class="section-title">
                     <i class="fas fa-user-plus"></i>
                     Cadastrar Novo Morador
                 </h2>
-
                 <form id="formMorador">
                     <div class="form-grid">
                         <div class="form-group">
@@ -855,18 +685,15 @@
                         </div>
                         <div class="form-group">
                             <label for="apartamentoMorador">Apartamento *</label>
-                            <input type="text" id="apartamentoMorador" placeholder="Ex: 101, 102, 201..." required>
+                            <input type="text" id="apartamentoMorador" placeholder="Ex: 101, 102..." required>
                         </div>
                     </div>
-
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="limparFormulario('formMorador')">
-                            <i class="fas fa-broom"></i>
-                            Limpar Formulário
+                            <i class="fas fa-broom"></i> Limpar
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-user-plus"></i>
-                            Cadastrar Morador
+                            <i class="fas fa-user-plus"></i> Cadastrar Morador
                         </button>
                     </div>
                 </form>
@@ -875,14 +702,13 @@
             <div class="table-container">
                 <div class="table-header">
                     <div class="table-title">
-                        <i class="fas fa-users"></i>
-                        Moradores Cadastrados (<span id="contadorMoradores">0</span>)
+                        <i class="fas fa-users"></i> Moradores Cadastrados (<span id="contadorMoradores">0</span>)
                     </div>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        <input type="text" id="buscaMorador" placeholder="Buscar por nome..." style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;" onkeyup="filtrarMoradores()">
+                    <div>
+                        <input type="text" id="buscaMorador" placeholder="Buscar por nome..." onkeyup="filtrarMoradores()"
+                            style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
                 </div>
-
                 <div style="overflow-x: auto;">
                     <table class="table">
                         <thead>
@@ -895,9 +721,7 @@
                         </thead>
                         <tbody id="tabelaMoradores">
                             <tr>
-                                <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
-                                    Nenhum morador cadastrado ainda
-                                </td>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">Nenhum morador cadastrado ainda.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -906,7 +730,6 @@
         </div>
     </div>
 
-    <!-- Modal de Edição de Morador -->
     <div id="modalEditarMorador" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -914,6 +737,7 @@
                 <button class="close" onclick="fecharModal('modalEditarMorador')">&times;</button>
             </div>
             <form id="formEditarMorador">
+                <input type="hidden" id="editMoradorId">
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Nome Completo</label>
@@ -925,4 +749,430 @@
                     </div>
                     <div class="form-group">
                         <label>Bloco</label>
-                        
+                        <input type="text" id="editBloco" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Apartamento</label>
+                        <input type="text" id="editApartamento" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalEditarMorador')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEntrega" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Marcar como Entregue</h3>
+                <button class="close" onclick="fecharModal('modalEntrega')">&times;</button>
+            </div>
+            <form id="formEntrega">
+                <input type="hidden" id="entregaCorrespondenciaId">
+                <div class="form-group">
+                    <label for="entreguePara">Entregue para (Nome completo) *</label>
+                    <input type="text" id="entreguePara" placeholder="Digite o nome de quem retirou a correspondência" required>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dataEntrega">Data da Entrega</label>
+                        <input type="date" id="dataEntrega" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaEntrega">Hora da Entrega</label>
+                        <input type="time" id="horaEntrega" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="observacoesEntrega">Observações da Entrega</label>
+                    <textarea id="observacoesEntrega" placeholder="Informações adicionais sobre a entrega (opcional)" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalEntrega')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Confirmar Entrega
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Sistema de persistência usando localStorage
+        class DatabaseManager {
+            constructor() {
+                this.initializeData();
+            }
+
+            initializeData() {
+                if (!localStorage.getItem('moradores')) {
+                    localStorage.setItem('moradores', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('correspondencias')) {
+                    localStorage.setItem('correspondencias', JSON.stringify([]));
+                }
+            }
+
+            // Métodos para Moradores
+            getMoradores() {
+                return JSON.parse(localStorage.getItem('moradores') || '[]');
+            }
+
+            saveMoradores(moradores) {
+                localStorage.setItem('moradores', JSON.stringify(moradores));
+            }
+
+            // Métodos para Correspondências
+            getCorrespondencias() {
+                return JSON.parse(localStorage.getItem('correspondencias') || '[]');
+            }
+
+            saveCorrespondencias(correspondencias) {
+                localStorage.setItem('correspondencias', JSON.stringify(correspondencias));
+            }
+        }
+
+        const db = new DatabaseManager();
+
+        // Variáveis de estado
+        let moradores = db.getMoradores();
+        let correspondencias = db.getCorrespondencias();
+
+        // Navegação
+        function showSection(sectionId) {
+            document.querySelectorAll('.content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(`${sectionId}-section`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(navItem => {
+                navItem.classList.remove('active');
+            });
+            document.querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`).classList.add('active');
+
+            if (sectionId === 'moradores') {
+                renderTabelaMoradores();
+            } else if (sectionId === 'correspondencias') {
+                renderTabelaCorrespondencias();
+            } else if (sectionId === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Dashboard
+        function updateDashboard() {
+            moradores = db.getMoradores();
+            correspondencias = db.getCorrespondencias();
+
+            document.getElementById('totalMoradores').textContent = moradores.length;
+            document.getElementById('totalCorrespondencias').textContent = correspondencias.length;
+            document.getElementById('pendentes').textContent = correspondencias.filter(c => c.status === 'Pendente').length;
+            document.getElementById('entregues').textContent = correspondencias.filter(c => c.status === 'Entregue').length;
+        }
+
+        // Moradores
+        const formMorador = document.getElementById('formMorador');
+        const tabelaMoradores = document.getElementById('tabelaMoradores');
+        const contadorMoradores = document.getElementById('contadorMoradores');
+        const filtroBlocoCorrespondencia = document.getElementById('filtroBloco');
+
+        function renderTabelaMoradores(listaMoradores = moradores) {
+            tabelaMoradores.innerHTML = listaMoradores.length > 0 ?
+                listaMoradores.map(m => `
+                <tr>
+                    <td>${m.nome}</td>
+                    <td>Bloco ${m.bloco} - Apto ${m.apartamento}</td>
+                    <td>${m.telefone}</td>
+                    <td>
+                        <a href="#" class="action-link" onclick="editarMorador(${m.id})"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="action-link" onclick="excluirMorador(${m.id})"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                `).join('') :
+                `<tr><td colspan="4" class="no-data">Nenhum morador cadastrado ainda.</td></tr>`;
+            contadorMoradores.textContent = listaMoradores.length;
+            updateBlocoSelects();
+        }
+
+        function updateBlocoSelects() {
+            const blocos = [...new Set(moradores.map(m => m.bloco))].sort((a, b) => a - b);
+            const blocoSelects = document.querySelectorAll('#bloco, #apartamento, #blocoMorador, #apartamentoMorador, #filtroBloco');
+            
+            blocoSelects.forEach(select => {
+                if (select.id === 'bloco' || select.id === 'filtroBloco') {
+                    select.innerHTML = '<option value="">Todos</option>';
+                    blocos.forEach(bloco => {
+                        select.innerHTML += `<option value="${bloco}">Bloco ${bloco}</option>`;
+                    });
+                }
+            });
+            document.getElementById('bloco').addEventListener('change', updateApartamentoSelect);
+            document.getElementById('bloco').value = '';
+        }
+
+        function updateApartamentoSelect() {
+            const bloco = document.getElementById('bloco').value;
+            const apartamentoSelect = document.getElementById('apartamento');
+            const moradoresDoBloco = moradores.filter(m => m.bloco === bloco);
+
+            apartamentoSelect.innerHTML = '<option value="">Selecione...</option>';
+            moradoresDoBloco.forEach(m => {
+                apartamentoSelect.innerHTML += `<option value="${m.apartamento}" data-id="${m.id}">${m.apartamento}</option>`;
+            });
+        }
+
+        formMorador.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nomeCompleto').value;
+            const telefone = document.getElementById('telefone').value;
+            const bloco = document.getElementById('blocoMorador').value;
+            const apartamento = document.getElementById('apartamentoMorador').value;
+            const morador = {
+                id: Date.now(),
+                nome,
+                telefone,
+                bloco,
+                apartamento
+            };
+            moradores.push(morador);
+            db.saveMoradores(moradores);
+            renderTabelaMoradores();
+            showToast('Morador cadastrado com sucesso!', 'success');
+            formMorador.reset();
+        });
+
+        function filtrarMoradores() {
+            const termo = document.getElementById('buscaMorador').value.toLowerCase();
+            const moradoresFiltrados = moradores.filter(m =>
+                m.nome.toLowerCase().includes(termo) ||
+                m.bloco.toLowerCase().includes(termo) ||
+                m.apartamento.toLowerCase().includes(termo)
+            );
+            renderTabelaMoradores(moradoresFiltrados);
+        }
+
+        function editarMorador(id) {
+            const morador = moradores.find(m => m.id === id);
+            if (morador) {
+                document.getElementById('editMoradorId').value = morador.id;
+                document.getElementById('editNome').value = morador.nome;
+                document.getElementById('editTelefone').value = morador.telefone;
+                document.getElementById('editBloco').value = morador.bloco;
+                document.getElementById('editApartamento').value = morador.apartamento;
+                abrirModal('modalEditarMorador');
+            }
+        }
+
+        const formEditarMorador = document.getElementById('formEditarMorador');
+        formEditarMorador.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('editMoradorId').value);
+            const nome = document.getElementById('editNome').value;
+            const telefone = document.getElementById('editTelefone').value;
+            const bloco = document.getElementById('editBloco').value;
+            const apartamento = document.getElementById('editApartamento').value;
+
+            const moradorIndex = moradores.findIndex(m => m.id === id);
+            if (moradorIndex !== -1) {
+                moradores[moradorIndex] = { ...moradores[moradorIndex], nome, telefone, bloco, apartamento };
+                db.saveMoradores(moradores);
+                renderTabelaMoradores();
+                fecharModal('modalEditarMorador');
+                showToast('Morador atualizado com sucesso!', 'success');
+            }
+        });
+
+        function excluirMorador(id) {
+            if (confirm('Tem certeza que deseja excluir este morador?')) {
+                moradores = moradores.filter(m => m.id !== id);
+                db.saveMoradores(moradores);
+                renderTabelaMoradores();
+                showToast('Morador excluído com sucesso!', 'success');
+            }
+        }
+
+        // Correspondências
+        const formCorrespondencia = document.getElementById('formCorrespondencia');
+        const tabelaCorrespondencias = document.getElementById('tabelaCorrespondencias');
+        const contadorCorrespondencias = document.getElementById('contadorCorrespondencias');
+
+        function renderTabelaCorrespondencias(listaCorrespondencias = correspondencias) {
+            tabelaCorrespondencias.innerHTML = listaCorrespondencias.length > 0 ?
+                listaCorrespondencias.map(c => {
+                    const morador = moradores.find(m => m.id === c.moradorId) || {};
+                    const statusClass = c.status === 'Pendente' ? 'status-pendente' : 'status-entregue';
+                    return `
+                        <tr>
+                            <td>${new Date(c.dataCadastro).toLocaleDateString()}</td>
+                            <td>${morador.nome || 'N/A'}</td>
+                            <td>${morador.bloco || 'N/A'} - ${morador.apartamento || 'N/A'}</td>
+                            <td>${c.tipo}</td>
+                            <td>${c.observacoes || '-'}</td>
+                            <td><span class="${statusClass}">${c.status}</span></td>
+                            <td>
+                                ${c.status === 'Pendente' ? `
+                                <a href="#" class="action-link" onclick="abrirModalEntrega(${c.id})"><i class="fas fa-box-open"></i></a>
+                                ` : ''}
+                                <a href="#" class="action-link" onclick="excluirCorrespondencia(${c.id})"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    `;
+                }).join('') :
+                `<tr><td colspan="7" class="no-data">Nenhuma correspondência registrada ainda.</td></tr>`;
+            contadorCorrespondencias.textContent = listaCorrespondencias.length;
+        }
+
+        formCorrespondencia.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const bloco = document.getElementById('bloco').value;
+            const apartamento = document.getElementById('apartamento').value;
+            const moradorElemento = document.querySelector(`#apartamento option[value="${apartamento}"]`);
+            const moradorId = moradorElemento ? parseInt(moradorElemento.getAttribute('data-id')) : null;
+
+            const novaCorrespondencia = {
+                id: Date.now(),
+                moradorId,
+                tipo: document.getElementById('tipo').value,
+                observacoes: document.getElementById('observacoes').value,
+                dataCadastro: new Date().toISOString(),
+                status: 'Pendente'
+            };
+
+            correspondencias.unshift(novaCorrespondencia);
+            db.saveCorrespondencias(correspondencias);
+            renderTabelaCorrespondencias();
+            updateDashboard();
+            showToast('Correspondência registrada com sucesso!', 'success');
+            limparFormulario('formCorrespondencia');
+        });
+
+        function filtrarCorrespondencias() {
+            const filtroMorador = document.getElementById('filtroMorador').value.toLowerCase();
+            const filtroBloco = document.getElementById('filtroBloco').value;
+            const filtroStatus = document.getElementById('filtroStatus').value;
+
+            const correspondenciasFiltradas = correspondencias.filter(c => {
+                const morador = moradores.find(m => m.id === c.moradorId) || {};
+                const nomeMorador = morador.nome ? morador.nome.toLowerCase() : '';
+                const blocoMorador = morador.bloco ? morador.bloco.toLowerCase() : '';
+
+                const matchesMorador = !filtroMorador || nomeMorador.includes(filtroMorador);
+                const matchesBloco = !filtroBloco || blocoMorador === filtroBloco.toLowerCase();
+                const matchesStatus = !filtroStatus || c.status === filtroStatus;
+
+                return matchesMorador && matchesBloco && matchesStatus;
+            });
+
+            renderTabelaCorrespondencias(correspondenciasFiltradas);
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtroMorador').value = '';
+            document.getElementById('filtroBloco').value = '';
+            document.getElementById('filtroStatus').value = '';
+            renderTabelaCorrespondencias();
+        }
+
+        function excluirCorrespondencia(id) {
+            if (confirm('Tem certeza que deseja excluir esta correspondência?')) {
+                correspondencias = correspondencias.filter(c => c.id !== id);
+                db.saveCorrespondencias(correspondencias);
+                renderTabelaCorrespondencias();
+                updateDashboard();
+                showToast('Correspondência excluída com sucesso!', 'success');
+            }
+        }
+
+        // Modals
+        function abrirModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Entrega
+        function abrirModalEntrega(id) {
+            document.getElementById('entregaCorrespondenciaId').value = id;
+            document.getElementById('entreguePara').value = '';
+            document.getElementById('dataEntrega').valueAsDate = new Date();
+            document.getElementById('horaEntrega').value = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            abrirModal('modalEntrega');
+        }
+
+        const formEntrega = document.getElementById('formEntrega');
+        formEntrega.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('entregaCorrespondenciaId').value);
+            const entreguePara = document.getElementById('entreguePara').value;
+            const dataEntrega = document.getElementById('dataEntrega').value;
+            const horaEntrega = document.getElementById('horaEntrega').value;
+            const observacoesEntrega = document.getElementById('observacoesEntrega').value;
+
+            const correspondenciaIndex = correspondencias.findIndex(c => c.id === id);
+            if (correspondenciaIndex !== -1) {
+                correspondencias[correspondenciaIndex] = {
+                    ...correspondencias[correspondenciaIndex],
+                    status: 'Entregue',
+                    entreguePara,
+                    dataEntrega,
+                    horaEntrega,
+                    observacoesEntrega
+                };
+                db.saveCorrespondencias(correspondencias);
+                renderTabelaCorrespondencias();
+                updateDashboard();
+                fecharModal('modalEntrega');
+                showToast('Entrega confirmada!', 'success');
+            }
+        });
+
+        // Utils
+        function limparFormulario(formId) {
+            document.getElementById(formId).reset();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => {
+                toast.className = toast.className.replace(' show', '');
+            }, 3000);
+        }
+
+        // Funções de exportação
+        function exportarCorrespondencias() {
+            // Lógica para exportar para Excel (usando uma biblioteca como SheetJS, que precisa ser incluída)
+            showToast('Funcionalidade de exportação em desenvolvimento.', 'warning');
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('dashboard');
+            renderTabelaMoradores();
+            renderTabelaCorrespondencias();
+        });
+    </script>
+</body>
+</html>
