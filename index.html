@@ -40,17 +40,17 @@
         .header h1 {
             font-size: 2.5rem;
         }
-        
+
         .header p {
             font-size: 1rem;
             opacity: 0.8;
         }
-        
+
         .logo-pequeno {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 70px; 
+            width: 70px;
             height: auto;
             border-radius: 8px;
         }
@@ -61,7 +61,7 @@
             background: white;
             padding: 0 2rem;
             border-bottom: 1px solid #e9ecef;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
@@ -92,7 +92,7 @@
         .form-container, .table-container {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             padding: 2rem;
             margin-bottom: 2rem;
         }
@@ -229,7 +229,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        
+
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -250,7 +250,7 @@
             color: #3c763d;
             border: 1px solid #d6e9c6;
         }
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -273,19 +273,19 @@
             max-width: 500px;
             position: relative;
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
-        
+
         .modal-title {
             font-size: 1.5rem;
             font-weight: 600;
         }
-        
+
         .close {
             background: none;
             border: none;
@@ -293,7 +293,6 @@
             cursor: pointer;
             color: #666;
         }
-
     </style>
 </head>
 <body>
@@ -377,7 +376,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <div class="table-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <h2 class="section-title"><i class="fas fa-list"></i> Correspondências Pendentes</h2>
@@ -433,7 +432,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="moradores-section" class="content-section hidden">
             <div class="form-container">
                 <h2 class="section-title">
@@ -473,7 +472,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <div class="table-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <h2 class="section-title">
@@ -503,7 +502,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="correspondencias-entregues-section" class="content-section hidden">
             <div class="table-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -640,7 +639,7 @@
             </form>
         </div>
     </div>
-    
+
     <script>
         const db = {
             moradores: [],
@@ -802,12 +801,12 @@
             popularApartamentos(inputs.apartamentoCorrespondencia, bloco);
             popularMoradores();
         }
-        
+
         function popularApartamentosMorador() {
              const bloco = inputs.blocoMorador.value;
              popularApartamentos(inputs.apartamentoMorador, bloco);
         }
-        
+
         function popularApartamentosEdicao() {
             const bloco = inputs.editBloco.value;
             popularApartamentos(inputs.editApartamento, bloco);
@@ -828,7 +827,7 @@
         function popularMoradores() {
             const bloco = inputs.blocoCorrespondencia.value;
             const apto = inputs.apartamentoCorrespondencia.value;
-            
+
             const moradorSelect = inputs.moradorCorrespondencia;
             moradorSelect.innerHTML = '<option value="">Selecione...</option>';
 
@@ -896,7 +895,7 @@
                 const aptoMatch = !filtro.apto || c.apto === filtro.apto;
                 return moradorMatch && blocoMatch && aptoMatch;
             });
-            
+
             if (filtradas.length === 0) {
                 tables.tabelaCorrespondenciasEntregues.innerHTML = `<tr><td colspan="6" class="no-data">Nenhuma correspondência entregue.</td></tr>`;
                 return;
@@ -916,7 +915,7 @@
 
         function renderizarTabelaMoradores(filtro = '') {
             const filtrados = db.moradores.filter(m => m.nome.toLowerCase().includes(filtro.toLowerCase()));
-            
+
             if (filtrados.length === 0) {
                 tables.tabelaMoradores.innerHTML = `<tr><td colspan="4" class="no-data">Nenhum morador cadastrado ainda.</td></tr>`;
                 return;
@@ -934,11 +933,11 @@
                 </tr>
             `).join('');
         }
-        
+
         function formatarNome(nome) {
             return nome.toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
         }
-        
+
         // Event Listeners dos formulários
         forms.formCorrespondencia.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -970,7 +969,7 @@
             renderizarTabelas();
             popularSelects();
         });
-        
+
         forms.formEditarMorador.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = inputs.editMoradorId.value;
@@ -1007,15 +1006,15 @@
                 inputs.editMoradorId.value = morador.id;
                 inputs.editNome.value = morador.nome;
                 inputs.editTelefone.value = morador.telefone;
-                
+
                 popularApartamentosEdicao(); // Popula os apartamentos antes de definir o valor
                 inputs.editBloco.value = morador.bloco;
                 inputs.editApartamento.value = morador.apartamento;
-                
+
                 modals.editarMorador.style.display = 'block';
             }
         }
-        
+
         function abrirModalEntrega(id) {
             const correspondencia = db.correspondencias.find(c => c.id === id);
             if (correspondencia) {
@@ -1027,14 +1026,14 @@
         function fecharModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
-        
+
         function excluirMorador(id) {
             if (confirm('Tem certeza que deseja excluir este morador?')) {
                 db.deleteMorador(id);
                 renderizarTabelas();
             }
         }
-        
+
         function excluirCorrespondencia(id) {
             if (confirm('Tem certeza que deseja excluir esta correspondência do histórico?')) {
                 db.correspondencias = db.correspondencias.filter(c => c.id !== id);
@@ -1055,7 +1054,7 @@
             };
             renderizarTabelaCorrespondenciasPendentes(filtro);
         }
-        
+
         function limparFiltrosPendentes() {
             inputs.filtroMoradorPendente.value = '';
             inputs.filtroBlocoPendente.value = '';
@@ -1071,7 +1070,7 @@
             };
             renderizarTabelaCorrespondenciasEntregues(filtro);
         }
-        
+
         function limparFiltrosEntregues() {
             inputs.filtroMoradorEntregue.value = '';
             inputs.filtroBlocoEntregue.value = '';
@@ -1116,17 +1115,15 @@
         }
 
         function notificarAtrasadas() {
-            // Esta função seria onde você integraria com uma API de SMS ou WhatsApp
-            // Por enquanto, ela apenas mostra um alerta.
             const correspondenciasAtrasadas = db.correspondencias.filter(c => c.status === 'Pendente' && (new Date() - new Date(c.dataCadastro)) > 7 * 24 * 60 * 60 * 1000); // Mais de 7 dias
-            
+
             if (correspondenciasAtrasadas.length > 0) {
                 alert(`Há ${correspondenciasAtrasadas.length} correspondências atrasadas. A notificação foi enviada.`);
             } else {
                 alert('Não há correspondências atrasadas para notificar.');
             }
         }
-        
+
         window.onload = init;
 
         window.addEventListener('beforeunload', () => db.salvar());
