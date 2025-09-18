@@ -331,7 +331,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="blocoCorrespondencia">Bloco *</label>
-                            <select id="blocoCorrespondencia" required onchange="popularApartamentosE Moradores()">
+                            <select id="blocoCorrespondencia" required onchange="popularApartamentosEMoradores()">
                                 <option value="">Selecione...</option>
                             </select>
                         </div>
@@ -789,7 +789,7 @@
             });
         }
 
-        function popularApartamentosE Moradores() {
+        function popularApartamentosEMoradores() {
             const bloco = inputs.blocoCorrespondencia.value;
             popularApartamentos(inputs.apartamentoCorrespondencia, bloco);
             popularMoradores();
@@ -944,7 +944,7 @@
             db.addCorrespondencia(correspondencia);
             alert('Correspondência registrada com sucesso! A notificação foi enviada.');
             forms.formCorrespondencia.reset();
-            popularApartamentosE Moradores();
+            popularApartamentosEMoradores();
             renderizarTabelas();
         });
 
