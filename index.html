@@ -647,8 +647,16 @@
             correspondencias: [],
 
             init() {
-                this.moradores = JSON.parse(localStorage.getItem('moradores')) || [];
-                this.correspondencias = JSON.parse(localStorage.getItem('correspondencias')) || [];
+                this.moradores = JSON.parse(localStorage.getItem('moradores')) || [
+                    { id: '1', nome: 'João da Silva', telefone: '11987654321', bloco: '01', apartamento: '101' },
+                    { id: '2', nome: 'Maria Souza', telefone: '11999999999', bloco: '01', apartamento: '101' },
+                    { id: '3', nome: 'Pedro Henrique', telefone: '11988888888', bloco: '02', apartamento: '202' }
+                ];
+                this.correspondencias = JSON.parse(localStorage.getItem('correspondencias')) || [
+                    { id: 'c1', bloco: '01', apto: '101', morador: 'João da Silva', tipo: 'encomenda', descricao: 'Livro da Amazon', dataCadastro: new Date().toISOString(), status: 'Pendente' },
+                    { id: 'c2', bloco: '02', apto: '202', morador: 'Pedro Henrique', tipo: 'carta', descricao: 'Fatura do cartão', dataCadastro: new Date().toISOString(), status: 'Pendente' },
+                    { id: 'c3', bloco: '01', apto: '101', morador: 'Maria Souza', tipo: 'sedex', descricao: 'Caixa grande - Correios', dataCadastro: new Date().toISOString(), status: 'Entregue', entreguePara: 'Maria Souza', dataEntrega: '2025-09-17', horaEntrega: '15:30' }
+                ];
             },
 
             salvar() {
@@ -1107,6 +1115,18 @@
             alert('Arquivo Excel (CSV) gerado com sucesso! Verifique a pasta de downloads.');
         }
 
+        function notificarAtrasadas() {
+            // Esta função seria onde você integraria com uma API de SMS ou WhatsApp
+            // Por enquanto, ela apenas mostra um alerta.
+            const correspondenciasAtrasadas = db.correspondencias.filter(c => c.status === 'Pendente' && (new Date() - new Date(c.dataCadastro)) > 7 * 24 * 60 * 60 * 1000); // Mais de 7 dias
+            
+            if (correspondenciasAtrasadas.length > 0) {
+                alert(`Há ${correspondenciasAtrasadas.length} correspondências atrasadas. A notificação foi enviada.`);
+            } else {
+                alert('Não há correspondências atrasadas para notificar.');
+            }
+        }
+        
         window.onload = init;
 
         window.addEventListener('beforeunload', () => db.salvar());
